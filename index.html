@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مستودع الطوبة - تحليل النفط</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { background: linear-gradient(145deg, #1a2a2f 0%, #0d171c 100%); min-height:100vh; display:flex; justify-content:center; align-items:center; padding:20px; }
+.login-card { background: rgba(30, 50, 55, 0.85); backdrop-filter: blur(6px); padding: 45px 35px; border-radius: 32px; box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 215, 140, 0.2); width: 100%; max-width: 400px; text-align: center; transition: transform 0.3s ease; }
+.login-card:hover { transform: translateY(-4px); }
+.login-card h2 { color: #f5d6a8; font-size: 28px; letter-spacing: 1px; margin-bottom: 8px; font-weight: 300; }
+.login-card p { color: #b8c9c9; font-size: 14px; margin-bottom: 30px; border-bottom: 1px solid #3f5a5f; padding-bottom: 16px; }
+.login-card label { display: block; text-align: right; color: #d4b68a; font-size: 15px; margin-bottom: 6px; }
+.login-card input[type="password"] { width: 100%; padding: 14px 18px; border: none; border-radius: 40px; background: #1f343a; color: #f0e6d8; font-size: 16px; outline: 2px solid transparent; transition: 0.3s; margin-bottom: 22px; }
+.login-card input[type="password"]:focus { outline: 2px solid #e8b87c; background: #1f3a42; }
+.login-card button { background: #d6a56b; border: none; padding: 14px 30px; border-radius: 40px; font-size: 18px; font-weight: 600; color: #1a2a2f; cursor: pointer; transition: 0.25s; width: 100%; letter-spacing: 0.5px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); font-family: inherit; }
+.login-card button:hover { background: #eac08a; transform: scale(1.02); box-shadow: 0 8px 18px rgba(214, 165, 107, 0.3); }
+.login-error { color: #f28b82; font-size: 14px; margin-top: 12px; height: 20px; }
+.lock-card { border: 2px solid rgba(255, 138, 128, 0.35) !important; box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.9), 0 0 40px rgba(239, 83, 80, 0.15) !important; }
+.lock-card h2 { color: #FF8A80 !important; }
+.lock-card p  { color: #FFCDD2 !important; }
+.lock-card button { background: #EF5350 !important; color: #FFFFFF !important; }
+.lock-card button:hover { background: #FF7043 !important; box-shadow: 0 8px 18px rgba(239, 83, 80, 0.35) !important; }
+.main-section { display: none; width: 100%; max-width: 1000px; background: linear-gradient(160deg, #4E342E 0%, #3E2723 100%); border-radius: 32px; padding: 30px 28px 25px; border: 2px solid #6D4C41; box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 224, 178, 0.1); animation: fadeIn 0.6s ease; position: relative; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.main-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #6D4C41; padding-bottom: 14px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+.main-header h1 { color: #FFECB3; font-size: 26px; font-weight: 500; letter-spacing: 1px; }
+.main-header h1 span { font-weight: 700; color: #FFB74D; }
+.main-header .subtitle { color: #FFE0B2; font-size: 14px; background: #5D4037; padding: 6px 16px; border-radius: 30px; border: 1px solid #8D6E63; }
+.sample-name-bar { background: #5D4037; border: 2px solid #8D6E63; border-radius: 20px; padding: 12px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4); }
+.sample-name-bar label { color: #FFE0B2; font-size: 15px; font-weight: 600; white-space: nowrap; }
+.sample-name-bar input { flex: 1; background: #3E2723; border: 2px solid #6D4C41; border-radius: 12px; padding: 10px 16px; color: #FFF8E1; font-size: 17px; font-weight: 600; outline: none; transition: 0.2s; font-family: inherit; }
+.sample-name-bar input:focus { border-color: #FFB74D; box-shadow: 0 0 0 3px rgba(255, 183, 77, 0.2); }
+.sample-name-bar input::placeholder { color: #A1887F; font-weight: 400; }
+.sample-name-bar input.error { color: #FF5252; border-color: #FF5252; background: #4A1F1F; animation: shake 0.4s ease; }
+.fields-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+.field-item { background: #5D4037; border-radius: 20px; padding: 14px 14px 16px; border: 2px solid #6D4C41; transition: 0.3s ease; box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column; }
+.field-item:hover { border-color: #FFB74D; }
+.field-item label { display: block; color: #FFCC80; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 8px; text-align: center; text-transform: uppercase; }
+.field-item input { width: 100%; padding: 12px 10px; background: #3E2723; border: 2px solid #4E342E; border-radius: 14px; color: #FFFFFF; font-size: 20px; text-align: center; outline: none; transition: 0.2s; font-weight: 700; letter-spacing: 1px; font-family: 'Courier New', monospace; }
+.field-item input:focus { border-color: #FFB74D; box-shadow: 0 0 0 3px rgba(255, 183, 77, 0.2); background: #4E342E; }
+.field-item input::placeholder { color: #8D6E63; font-size: 14px; font-weight: 400; letter-spacing: 0; }
+.field-item input.error { color: #FF5252 !important; background: #4A1F1F !important; border-color: #FF5252 !important; animation: shake 0.4s ease; }
+.field-item.manual-field { background: #4A3A2A; border-color: #4DD0E1; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+.temp-input-wrapper { display: flex; flex-direction: column; gap: 6px; margin-top: auto; }
+.temp-unit-toggle { display: flex; background: #3E2723; border-radius: 30px; padding: 3px; gap: 2px; border: 2px solid #4E342E; }
+.unit-btn { flex: 1; background: transparent; border: none; color: #8D6E63; padding: 5px 8px; font-size: 12px; cursor: pointer; border-radius: 30px; transition: 0.2s; font-weight: 700; font-family: inherit; }
+.unit-btn.active { background: #FFB74D; color: #3E2723; }
+.unit-btn:hover:not(.active) { color: #FFCC80; background: #4E342E; }
+.info-bar { margin-top: 18px; background: #3E2723; border: 2px dashed #6D4C41; border-radius: 18px; padding: 14px 20px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px; font-size: 13px; }
+.info-bar .info-item { display: flex; align-items: center; gap: 8px; }
+.info-bar .info-item .label { color: #A1887F; font-weight: 600; }
+.info-bar .info-item strong { color: #FFD54F; font-weight: 700; font-size: 15px; font-family: 'Courier New', monospace; }
+.info-bar .status-valid { color: #A5D6A7; background: #1B3A1B; padding: 3px 12px; border-radius: 20px; font-weight: 700; }
+.toolbar { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.btn-tool { padding: 12px 10px; border-radius: 14px; color: #FFF8E1; font-size: 14px; cursor: pointer; transition: 0.2s; border: 2px solid; font-weight: 700; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.btn-info    { background: #0277BD; border-color: #0288D1; }
+.btn-flow    { background: #6A1B9A; border-color: #7B1FA2; }
+.btn-clear   { background: #5D4037; border-color: #8D6E63; }
+.btn-image   { background: #2E7D32; border-color: #388E3C; }
+.btn-pdf     { background: #C62828; border-color: #D32F2F; }
+.btn-archive { background: #EF6C00; border-color: #F57C00; }
+.btn-view    { background: #00838F; border-color: #0097A7; }
+.btn-source  { background: #37474F; border-color: #546E7A; }
+.btn-lock    { background: #212121; border-color: #424242; }
+.btn-lock:hover { background: #424242; }
+.btn-tool:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4); filter: brightness(1.15); }
+.btn-tool:active { transform: translateY(0); }
+.btn-tool:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.datetime-bar { margin-top: 15px; text-align: center; color: #A1887F; font-size: 13px; font-family: 'Courier New', monospace; }
+.design-credit { font-size: 12px; color: #8D6E63; letter-spacing: 0.5px; border-top: 1px solid #5D4037; padding-top: 12px; margin-top: 12px; text-align: center; }
+.overlay { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px); padding: 20px; overflow-y: auto; }
+.overlay.active { display: flex; justify-content: center; align-items: flex-start; }
+.overlay-content { background: #FFF; border-radius: 24px; max-width: 900px; width: 100%; padding: 30px; margin: auto; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5); position: relative; animation: slideUp 0.4s ease; color: #333; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+.overlay-close { position: absolute; top: 15px; left: 15px; background: #EF5350; color: #FFF; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 20px; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+.overlay-close:hover { background: #C62828; transform: rotate(90deg); }
+.password-modal { background: linear-gradient(160deg, #263238 0%, #1a2a2f 100%); color: #FFF; padding: 35px 30px; border-radius: 24px; text-align: center; max-width: 420px; margin: auto; border: 2px solid #455A64; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7); animation: slideUp 0.4s ease; position: relative; }
+.password-modal h3 { color: #FFB74D; font-size: 22px; margin-bottom: 8px; }
+.password-modal .pwd-sub { color: #B0BEC5; font-size: 14px; margin-bottom: 22px; border-bottom: 1px solid #37474F; padding-bottom: 14px; }
+.password-modal input[type="password"] { width: 100%; padding: 14px 18px; border: 2px solid #455A64; border-radius: 40px; background: #0D171C; color: #FFF; font-size: 16px; text-align: center; letter-spacing: 3px; outline: none; transition: 0.2s; margin-bottom: 18px; font-family: 'Courier New', monospace; font-weight: 700; }
+.password-modal input[type="password"]:focus { border-color: #FFB74D; box-shadow: 0 0 0 3px rgba(255, 183, 77, 0.2); }
+.password-modal input[type="password"].error { border-color: #F44336; background: #2C1010; animation: shake 0.4s ease; }
+.password-modal .btn-row { display: flex; gap: 10px; }
+.password-modal .btn-pwd { flex: 1; padding: 12px; border: none; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.2s; font-family: inherit; }
+.password-modal .btn-pwd.confirm { background: #FFB74D; color: #263238; }
+.password-modal .btn-pwd.confirm:hover { background: #FFA726; transform: translateY(-2px); }
+.password-modal .btn-pwd.cancel { background: #455A64; color: #FFF; }
+.password-modal .btn-pwd.cancel:hover { background: #546E7A; transform: translateY(-2px); }
+.password-modal .pwd-error { color: #FF8A80; font-size: 14px; margin-top: 12px; min-height: 20px; font-weight: 600; }
+.instructions-content { background: linear-gradient(160deg, #FFF8E1 0%, #FFFFFF 100%); }
+.instructions-content h2 { color: #E65100; font-size: 28px; margin-bottom: 8px; text-align: center; border-bottom: 3px solid #FFB74D; padding-bottom: 12px; }
+.instructions-content .sub { text-align: center; color: #6D4C41; margin-bottom: 25px; font-size: 15px; }
+.instr-section { background: #FFF; border-right: 6px solid #FFB74D; border-radius: 12px; padding: 18px 22px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); transition: 0.3s; }
+.instr-section:hover { transform: translateX(-4px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); }
+.instr-section h3 { color: #BF360C; font-size: 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.instr-section p { color: #4E342E; font-size: 15px; line-height: 1.9; margin-bottom: 8px; }
+.instr-section ul { margin-right: 20px; color: #4E342E; line-height: 2; font-size: 15px; }
+.instr-section code { background: #FFF3E0; color: #BF360C; padding: 2px 8px; border-radius: 6px; font-family: 'Courier New', monospace; font-weight: 700; direction: ltr; display: inline-block; }
+.instr-warning { background: #FFEBEE; border-right-color: #EF5350; }
+.instr-warning h3 { color: #B71C1C; }
+.instr-tip { background: #E8F5E9; border-right-color: #4CAF50; }
+.instr-tip h3 { color: #1B5E20; }
+.workflow-content { background: linear-gradient(160deg, #EDE7F6 0%, #FFFFFF 100%); }
+.workflow-content h2 { color: #4527A0; font-size: 28px; margin-bottom: 8px; text-align: center; border-bottom: 3px solid #7E57C2; padding-bottom: 12px; }
+.workflow-content .sub { text-align: center; color: #5E35B1; margin-bottom: 25px; font-size: 15px; }
+.wf-diagram { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 15px; }
+.wf-node { background: linear-gradient(145deg, #5E35B1 0%, #4527A0 100%); color: #FFF; padding: 14px 26px; border-radius: 16px; font-weight: 700; font-size: 15px; text-align: center; box-shadow: 0 6px 14px rgba(69, 39, 160, 0.3); min-width: 200px; transition: 0.3s; }
+.wf-node:hover { transform: scale(1.05); }
+.wf-node.start { background: linear-gradient(145deg, #00897B, #00695C); }
+.wf-node.end   { background: linear-gradient(145deg, #C62828, #B71C1C); }
+.wf-node.calc  { background: linear-gradient(145deg, #F57C00, #E65100); }
+.wf-node.result{ background: linear-gradient(145deg, #2E7D32, #1B5E20); }
+.wf-arrow { color: #5E35B1; font-size: 26px; font-weight: 700; }
+.wf-row { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.wf-branch { display: flex; align-items: center; gap: 8px; flex-direction: column; }
+.archive-content { background: #F5F5F5; }
+.archive-content h2 { color: #00838F; font-size: 26px; margin-bottom: 8px; text-align: center; border-bottom: 3px solid #0097A7; padding-bottom: 12px; }
+.archive-empty { text-align: center; padding: 40px; color: #757575; font-size: 16px; }
+.archive-list { display: flex; flex-direction: column; gap: 12px; max-height: 500px; overflow-y: auto; padding: 5px; }
+.archive-item { background: #FFF; border-right: 5px solid #00838F; border-radius: 12px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); transition: 0.2s; }
+.archive-item:hover { box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15); transform: translateY(-2px); }
+.archive-item .info { flex: 1; min-width: 200px; }
+.archive-item .info .name { font-size: 16px; font-weight: 700; color: #263238; margin-bottom: 4px; }
+.archive-item .info .meta { font-size: 12px; color: #78909C; font-family: 'Courier New', monospace; }
+.archive-item .info .values { font-size: 12px; color: #455A64; margin-top: 6px; }
+.archive-item .values span { background: #ECEFF1; padding: 2px 8px; border-radius: 6px; margin-left: 6px; font-family: 'Courier New', monospace; font-weight: 700; }
+.archive-item .actions { display: flex; gap: 8px; }
+.btn-archive-load { background: #00838F; color: #FFF; border: none; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s; font-family: inherit; }
+.btn-archive-load:hover { background: #006064; }
+.btn-archive-del { background: #EF5350; color: #FFF; border: none; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s; font-family: inherit; }
+.btn-archive-del:hover { background: #C62828; }
+.archive-actions-top { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 10px; flex-wrap: wrap; }
+.btn-archive-clear-all { background: #B71C1C; color: #FFF; border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: inherit; }
+.btn-archive-clear-all:hover { background: #7F0000; }
+.source-content { background: linear-gradient(160deg, #0f1f26 0%, #0a1418 100%); max-width: 1100px; color: #CFD8DC; }
+.source-content h2 { color: #4DD0E1; text-align: center; font-size: 26px; margin-bottom: 6px; border-bottom: 3px solid #0097A7; padding-bottom: 12px; }
+.source-content .sub { text-align: center; color: #90A4AE; font-size: 13px; margin-bottom: 18px; }
+.source-toolbar { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+.source-toolbar button { background: #00838F; color: #FFF; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 14px; font-family: inherit; transition: 0.2s; }
+.source-toolbar button:hover { background: #006064; transform: translateY(-2px); }
+.source-toolbar button.download { background: #2E7D32; }
+.source-toolbar button.download:hover { background: #1B5E20; }
+#sourceTextarea { width: 100%; height: 65vh; min-height: 400px; background: #060d10; color: #A5D6A7; border: 2px solid #37474F; border-radius: 12px; padding: 15px; font-family: 'Courier New', monospace; font-size: 12.5px; line-height: 1.6; resize: vertical; outline: none; direction: ltr; text-align: left; white-space: pre; overflow: auto; tab-size: 4; }
+#sourceTextarea:focus { border-color: #4DD0E1; }
+.report-view { position: fixed; top: 0; left: -10000px; width: 820px; background: #FFFFFF; padding: 40px; font-family: 'Segoe UI', Tahoma, sans-serif; direction: rtl; z-index: -1; pointer-events: none; }
+.report-view .rpt-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px double #333; padding-bottom: 15px; margin-bottom: 20px; }
+.report-view .rpt-header h1 { color: #1a2a2f; font-size: 24px; margin: 0; }
+.report-view .rpt-header .logo { font-size: 40px; }
+.report-view .rpt-title { text-align: center; color: #333; font-size: 20px; font-weight: 700; margin-bottom: 20px; background: #F5F5F5; padding: 12px; border-radius: 8px; }
+.report-view .rpt-sample { background: #FFF8E1; border: 2px solid #FFB74D; padding: 12px 20px; border-radius: 10px; margin-bottom: 20px; font-size: 16px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.report-view .rpt-sample strong { color: #E65100; }
+.report-view .rpt-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+.report-view .rpt-table th { background: #1a2a2f; color: #FFF; padding: 12px; border: 1px solid #333; font-size: 15px; }
+.report-view .rpt-table td { padding: 12px; border: 1px solid #CCC; text-align: center; font-size: 16px; font-family: 'Courier New', monospace; font-weight: 700; color: #000; }
+.report-view .rpt-table tr:nth-child(even) td { background: #F9F9F9; }
+.report-view .rpt-notes { background: #F5F5F5; padding: 15px; border-radius: 8px; border-right: 5px solid #1a2a2f; font-size: 13px; color: #555; line-height: 1.7; }
+.report-view .rpt-footer { margin-top: 25px; display: flex; justify-content: space-between; padding-top: 15px; border-top: 2px solid #CCC; font-size: 13px; color: #666; }
+.report-view .rpt-status { display: inline-block; padding: 4px 14px; border-radius: 20px; font-weight: 700; }
+.report-view .rpt-status.valid { background: #E8F5E9; color: #1B5E20; }
+.report-view .rpt-status.invalid { background: #FFEBEE; color: #B71C1C; }
+.toast { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px); background: #263238; color: #FFF; padding: 14px 26px; border-radius: 12px; font-size: 15px; font-weight: 600; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); opacity: 0; transition: 0.4s ease; z-index: 2000; border-right: 5px solid #4CAF50; direction: rtl; }
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast.error { border-right-color: #F44336; }
+.toast.warn  { border-right-color: #FF9800; }
+.loading-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); display: none; justify-content: center; align-items: center; z-index: 3000; flex-direction: column; gap: 15px; }
+.loading-overlay.active { display: flex; }
+.loading-overlay .spinner { width: 55px; height: 55px; border: 6px solid #FFB74D; border-top-color: transparent; border-radius: 50%; animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-overlay .msg { color: #FFF; font-size: 16px; font-weight: 600; }
+.auth-alert { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.7); background: linear-gradient(160deg, #B71C1C 0%, #7F0000 100%); color: #FFF; padding: 30px 45px; border-radius: 20px; font-size: 22px; font-weight: 700; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); z-index: 5000; opacity: 0; pointer-events: none; transition: 0.35s ease; border: 3px solid #FF5252; text-align: center; direction: rtl; }
+.auth-alert.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+.auth-alert .auth-icon { font-size: 50px; display: block; margin-bottom: 10px; }
+.auth-alert .auth-msg { font-size: 20px; }
+.splash-overlay { position: fixed; inset: 0; z-index: 6000; display: none; justify-content: center; align-items: center; padding: 30px; text-align: center; direction: rtl; overflow: hidden; background: radial-gradient(circle at 50% 50%, #1e3a42 0%, #0a1418 65%, #000000 100%); }
+.splash-overlay.active { display: flex; }
+.splash-overlay::before { content: ''; position: absolute; inset: -50%; background: conic-gradient(from 0deg, transparent 0deg, rgba(255, 183, 77, 0.12) 60deg, transparent 120deg, rgba(77, 208, 225, 0.12) 200deg, transparent 260deg); animation: splashSpin 14s linear infinite; }
+@keyframes splashSpin { to { transform: rotate(360deg); } }
+.splash-msg { position: relative; display: none; opacity: 0; transform: scale(0.82); transition: opacity 0.85s ease, transform 0.85s ease; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 800; line-height: 1.9; letter-spacing: 1px; max-width: 920px; padding: 28px 38px; border-radius: 26px; }
+.splash-msg.show { opacity: 1; transform: scale(1); }
+.splash-msg.dedication { font-size: 46px; background: linear-gradient(90deg, #FFD54F 0%, #FF8A65 25%, #FFEB3B 50%, #FFB74D 75%, #FFD54F 100%); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; animation: shine 3.5s linear infinite; filter: drop-shadow(0 0 24px rgba(255, 183, 77, 0.6)); border: 2px solid rgba(255, 183, 77, 0.35); box-shadow: 0 0 70px rgba(255, 183, 77, 0.25), inset 0 0 45px rgba(255, 183, 77, 0.08); }
+.splash-msg.credit { font-size: 34px; background: linear-gradient(90deg, #4DD0E1 0%, #A5D6A7 25%, #81D4FA 50%, #4DD0E1 75%, #4DD0E1 100%); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; animation: shine 3.5s linear infinite; filter: drop-shadow(0 0 24px rgba(77, 208, 225, 0.55)); border: 2px solid rgba(77, 208, 225, 0.35); box-shadow: 0 0 70px rgba(77, 208, 225, 0.22), inset 0 0 45px rgba(77, 208, 225, 0.08); }
+@keyframes shine { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+.splash-msg .ltr { direction: ltr; unicode-bidi: embed; display: inline-block; font-family: 'Courier New', monospace; font-weight: 800; }
+@media (max-width: 640px) { .login-card { padding: 30px 20px; } .main-section { padding: 20px 14px 20px; border-radius: 24px; } .main-header h1 { font-size: 20px; } .fields-grid { grid-template-columns: 1fr 1fr; gap: 10px; } .sample-name-bar { flex-direction: column; align-items: stretch; } .overlay-content { padding: 20px; } .toolbar { grid-template-columns: 1fr 1fr; } .password-modal { padding: 25px 20px; } .auth-alert { padding: 22px 28px; font-size: 18px; } .auth-alert .auth-msg { font-size: 16px; } .splash-msg.dedication { font-size: 26px; padding: 18px 18px; line-height: 1.8; } .splash-msg.credit { font-size: 19px; padding: 18px 18px; line-height: 1.8; } }
+@media (max-width: 440px) { .fields-grid { grid-template-columns: 1fr; } .toolbar { grid-template-columns: 1fr; } .splash-msg.dedication { font-size: 21px; } .splash-msg.credit { font-size: 16px; } }
+</style>
+</head>
+<body>
+<div id="loginPage" class="login-card" style="display:none;">
+<h2>🔐 مستودع الطوبة</h2>
+<p>نتائج تحليل النفط</p>
+<label for="passInput">أدخل كلمة المرور</label>
+<input type="password" id="passInput" placeholder="•••••••" autocomplete="off">
+<button id="loginBtn">دخول</button>
+<div id="loginError" class="login-error"></div>
+</div>
+<div id="lockPage" class="login-card lock-card" style="display:none;">
+<h2>🔒 الواجهة معطّلة</h2>
+<p>تم تعطيل البرنامج بالكامل — لا يعمل إلا بكلمة مرور الإعادة</p>
+<label for="unlockInput">أدخل كلمة مرور الإعادة</label>
+<input type="password" id="unlockInput" placeholder="•••••••" autocomplete="off">
+<button id="unlockBtn">🔓 إعادة التفعيل</button>
+<div id="unlockError" class="login-error"></div>
+</div>
+<div id="mainSection" class="main-section" style="display:none;">
+<div class="main-header">
+<h1>🛢️ <span>مستودع الطوبة</span></h1>
+<div class="subtitle">نتائج تحليل النفط</div>
+</div>
+<div class="sample-name-bar">
+<label for="sampleName">📝 اسم النموذج:</label>
+<input type="text" id="sampleName" placeholder="أدخل اسم النموذج أو رقمه...">
+</div>
+<div class="fields-grid">
+<div class="field-item"><label>API °</label><input type="number" id="apiInput" step="any" placeholder="A.P.I"></div>
+<div class="field-item"><label>SP.GR</label><input type="number" id="spgrInput" step="any" placeholder="SP.GR"></div>
+<div class="field-item"><label>درجة الحرارة</label><div class="temp-input-wrapper"><input type="number" id="tempInput" step="any" placeholder="TEMP"><div class="temp-unit-toggle"><button type="button" class="unit-btn active" data-unit="C">°C</button><button type="button" class="unit-btn" data-unit="F">°F</button></div></div></div>
+<div class="field-item manual-field"><label>SP.GR@15 (يدوي)</label><input type="number" id="spgrManualInput" step="any" placeholder="اختياري"></div>
+<div class="field-item"><label>P.P.M</label><input type="number" id="ppmInput" step="any" placeholder="P.P.M"></div>
+<div class="field-item"><label>P.T.B</label><input type="number" id="ptbInput" step="any" placeholder="P.T.B"></div>
+</div>
+<div class="info-bar">
+<div class="info-item"><span class="label">SP.GR@15°C:</span><strong id="infoSPGR15">—</strong></div>
+<div class="info-item"><span class="label">VCF:</span><strong id="infoVCF">—</strong></div>
+<div class="info-item"><span class="label">الحرارة:</span><strong id="infoTempC">—</strong></div>
+<div class="info-item"><span class="label">الحالة:</span><span id="infoStatus" class="status-valid" style="display:none;">✅</span><strong id="infoStatusText">—</strong></div>
+</div>
+<div class="toolbar">
+<button class="btn-tool btn-info" id="btnInstructions">📖 التعليمات</button>
+<button class="btn-tool btn-flow" id="btnWorkflow">📊 مخطط العملية</button>
+<button class="btn-tool btn-clear" id="btnClear">🧹 مسح</button>
+<button class="btn-tool btn-image" id="btnSaveImage">📷 حفظ كصورة</button>
+<button class="btn-tool btn-pdf" id="btnSavePDF">📄 حفظ PDF</button>
+<button class="btn-tool btn-archive" id="btnArchive">💾 أرشفة</button>
+<button class="btn-tool btn-view" id="btnViewArchive">📁 عرض الأرشيف</button>
+<button class="btn-tool btn-source" id="btnViewSource">🖥️ عرض الكود</button>
+<button class="btn-tool btn-lock" id="btnLock">🔒 تعطيل</button>
+</div>
+<div class="datetime-bar" id="datetimeDisplay">--/--/---- --:--</div>
+<div class="design-credit">تصميم ابو سجاد</div>
+</div>
+<div id="passwordOverlay" class="overlay">
+<div class="password-modal">
+<h3 id="pwdTitle">🔒 تعطيل الواجهة</h3>
+<p class="pwd-sub" id="pwdSub">أدخل كلمة المرور الخاصة للتعطيل</p>
+<input type="password" id="lockPassInput" placeholder="•••••••" autocomplete="off">
+<div class="btn-row"><button class="btn-pwd confirm" id="pwdConfirmBtn">تأكيد</button><button class="btn-pwd cancel" id="pwdCancelBtn">إلغاء</button></div>
+<div class="pwd-error" id="pwdError"></div>
+</div>
+</div>
+<div id="authAlert" class="auth-alert"><span class="auth-icon">⛔</span><span class="auth-msg">غير مصرح لك بالدخول</span></div>
+<div id="instructionsOverlay" class="overlay">
+<div class="overlay-content instructions-content">
+<button class="overlay-close" data-close="instructionsOverlay">✕</button>
+<h2>📖 دليل استخدام البرنامج</h2>
+<p class="sub">شرح كامل لطريقة العمل والقياس في المختبر</p>
+<div class="instr-section"><h3>🔬 ١. الأجهزة المستخدمة في المختبر</h3><ul><li><strong>🌡️ مقياس الحرارة:</strong> لقياس درجة حرارة عينة النفط.</li><li><strong>⚖️ الهيدروميتر:</strong> لقياس الكثافة النوعية SP.GR عند حرارة العينة.</li><li><strong>🧪 جهاز الطرد المركزي:</strong> لقياس نسبة الماء والرواسب (PPM).</li></ul></div>
+<div class="instr-section"><h3>📋 ٢. خطوات الفحص العملي</h3><ul><li>املأ أسطوانة مدرّجة بحوالي 250 مل من عينة النفط.</li><li>أدخل الثرمومتر واقرأ درجة الحرارة (مثلاً <code>25°C</code>).</li><li>أدخل الهيدروميتر برفق واتركه يطفو، واقرأ SP.GR من الساق (مثلاً <code>0.8450</code>).</li><li>سجّل قيمتي الحرارة و SP.GR بدقة.</li></ul></div>
+<div class="instr-section"><h3>💻 ٣. إدخال البيانات في البرنامج</h3><ul><li>اكتب <strong>اسم النموذج</strong> في الأعلى.</li><li>أدخل <strong>درجة الحرارة</strong> واختر الوحدة الصحيحة.</li><li>أدخل قيمة <strong>SP.GR</strong> المقاسة من الهيدروميتر.</li><li>أدخل قيمة <strong>PPM</strong> من جهاز الطرد المركزي.</li><li>سيقوم البرنامج تلقائياً بحساب API و PTB و SP.GR@15°C.</li></ul></div>
+<div class="instr-section instr-tip"><h3>✨ ٤. الحقل اليدوي SP.GR@15</h3><p>إذا كانت لديك قيمة <strong>SP.GR عند 15°C</strong> من مصدر آخر، يمكنك إدخالها يدوياً لتجاوز الحساب التلقائي.</p></div>
+<div class="instr-section"><h3>🎯 ٥. التحقق من صحة القياس (VCF)</h3><p>يقوم البرنامج بحساب <strong>معامل التصحيح الحجمي (VCF)</strong> والتحقق من أنه ضمن النطاق المعقول:</p><ul><li><strong>✅ صحيح:</strong> VCF بين <code>0.90</code> و <code>1.05</code>.</li><li><strong>⚠️ غير صحيح:</strong> خارج هذا النطاق.</li></ul></div>
+<div class="instr-section instr-warning"><h3>⚠️ ٦. تنبيهات الخطأ</h3><p>عند إدخال قيمة غير منطقية، يتحول لون الرقم إلى <span style="color:#EF5350;font-weight:700;">الأحمر</span> مع ظهور تنبيه:</p><ul><li><strong>API:</strong> بين <code>0</code> و <code>100</code>.</li><li><strong>SP.GR:</strong> بين <code>0.70</code> و <code>1.10</code>.</li><li><strong>الحرارة:</strong> بين <code>-50°C</code> و <code>150°C</code>.</li></ul></div>
+<div class="instr-section"><h3>💾 ٧. الأرشفة والرجوع</h3><ul><li>اضغط <strong>أرشفة</strong> لحفظ النموذج بالتاريخ والوقت والاسم.</li><li>اضغط <strong>عرض الأرشيف</strong> للرجوع إلى أي نموذج محفوظ سابقاً.</li><li>البيانات تُحفظ في متصفحك (localStorage).</li></ul></div>
+<div class="instr-section instr-warning"><h3>🔒 ٨. تعطيل / إعادة تفعيل الواجهة</h3><ul><li>اضغط <strong>زر التعطيل</strong> لحماية الواجهة من العبث بشكل كامل.</li><li>أدخل كلمة المرور الخاصة للتعطيل.</li><li>بعد التعطيل تظهر شاشة قفل، ويتوقف البرنامج على جميع الأجهزة المتصلة.</li><li>لإعادة التفعيل، أدخل كلمة مرور الإعادة في شاشة القفل.</li></ul></div>
+<div class="instr-section instr-tip"><h3>🖥️ ٩. عرض الكود المصدري</h3><p>يمكنك الضغط على زر <strong>عرض الكود</strong> لرؤية الكود كاملاً في نافذة <strong>للقراءة فقط</strong>.</p></div>
+</div>
+</div>
+<div id="workflowOverlay" class="overlay">
+<div class="overlay-content workflow-content">
+<button class="overlay-close" data-close="workflowOverlay">✕</button>
+<h2>📊 مخطط سير العملية</h2>
+<p class="sub">من أخذ العينة حتى استخراج النتائج</p>
+<div class="wf-diagram">
+<div class="wf-node start">🧪 عينة النفط الخام</div>
+<div class="wf-arrow">▼</div>
+<div class="wf-row"><div class="wf-branch"><div class="wf-node">🌡️ الثرمومتر</div><div class="wf-arrow">▼</div><div class="wf-node">قياس الحرارة</div></div><div class="wf-branch"><div class="wf-node">⚖️ الهيدروميتر</div><div class="wf-arrow">▼</div><div class="wf-node">قياس SP.GR</div></div></div>
+<div class="wf-arrow">▼</div>
+<div class="wf-node calc">💻 إدخال البيانات في البرنامج</div>
+<div class="wf-arrow">▼</div>
+<div class="wf-node calc">🧮 حساب VCF وتصحيح SP.GR@15°C</div>
+<div class="wf-arrow">▼</div>
+<div class="wf-row"><div class="wf-node result">✅ API@60°F</div><div class="wf-node result">✅ SP.GR@15°C</div></div>
+<div class="wf-arrow">▼</div>
+<div class="wf-node calc">🧪 جهاز الطرد المركزي (PPM)</div>
+<div class="wf-arrow">▼</div>
+<div class="wf-node result">✅ PTB</div>
+<div class="wf-arrow">▼</div>
+<div class="wf-node end">💾 حفظ / أرشفة / PDF</div>
+</div>
+</div>
+</div>
+<div id="archiveOverlay" class="overlay">
+<div class="overlay-content archive-content">
+<button class="overlay-close" data-close="archiveOverlay">✕</button>
+<h2>📁 أرشيف النماذج</h2>
+<div class="archive-actions-top"><span style="color:#546E7A;font-size:14px;" id="archiveCount">عدد النماذج: 0</span><button class="btn-archive-clear-all" id="btnClearAllArchive">🗑️ حذف كل الأرشيف</button></div>
+<div id="archiveList" class="archive-list"></div>
+</div>
+</div>
+<div id="sourceOverlay" class="overlay">
+<div class="overlay-content source-content">
+<button class="overlay-close" data-close="sourceOverlay">✕</button>
+<h2>🖥️ الكود المصدري للبرنامج</h2>
+<p class="sub">🔒 للقراءة فقط — غير قابل للتعديل</p>
+<div class="source-toolbar"><button id="btnCopySource">📋 نسخ الكود</button><button id="btnDownloadSource" class="download">💾 تنزيل الملف</button></div>
+<textarea id="sourceTextarea" readonly spellcheck="false" wrap="off"></textarea>
+</div>
+</div>
+<div id="reportView" class="report-view">
+<div class="rpt-header"><div><h1>🛢️ مستودع الطوبة</h1><div style="color:#666;font-size:14px;">نتائج تحليل النفط</div></div><div class="logo">🧪</div></div>
+<div class="rpt-title">تقرير تحليل عينة نفط</div>
+<div class="rpt-sample"><div><strong>اسم النموذج:</strong> <span id="rptSampleName">—</span></div><div><strong>التاريخ:</strong> <span id="rptDate">—</span></div></div>
+<table class="rpt-table"><thead><tr><th>المعامل</th><th>القيمة</th></tr></thead><tbody>
+<tr><td>درجة حرارة القياس</td><td id="rptTemp">—</td></tr>
+<tr><td>SP.GR المقاس عند T</td><td id="rptSPGR">—</td></tr>
+<tr><td>معامل التصحيح الحجمي VCF</td><td id="rptVCF">—</td></tr>
+<tr><td>SP.GR@15°C (المصحّح)</td><td id="rptSPGR15">—</td></tr>
+<tr><td>درجة API عند 60°F</td><td id="rptAPI">—</td></tr>
+<tr><td>P.P.M</td><td id="rptPPM">—</td></tr>
+<tr><td>P.T.B</td><td id="rptPTB">—</td></tr>
+</tbody></table>
+<div style="text-align:center;margin:15px 0;"><strong>حالة القياس: </strong><span id="rptStatus" class="rpt-status valid">✅ صحيح</span></div>
+<div class="rpt-notes"><strong>ملاحظات:</strong> تم إجراء التحليل باستخدام مقياس الحرارة والهيدروميتر، وقد تم تصحيح الكثافة النوعية إلى درجة الحرارة المرجعية 15°C وفق معيار API MPMS 11.1.</div>
+<div class="rpt-footer"><div>تصميم: أبو سجاد</div><div id="rptFooterDate">—</div></div>
+</div>
+<div id="splashOverlay" class="splash-overlay">
+<div class="splash-msg dedication" id="splashMsg1">اهداء الى الاخوة مرتضى ابو حسن و علي ابو جنة</div>
+<div class="splash-msg credit" id="splashMsg2">تم التصميم والبرمجة بلغات <span class="ltr">HTML + CSS + JavaScript</span></div>
+</div>
+<div id="loadingOverlay" class="loading-overlay"><div class="spinner"></div><div class="msg" id="loadingMsg">جارٍ التجهيز...</div></div>
+<div id="toast" class="toast"></div>
+<script>
+(function() {
+'use strict';
+const ORIGINAL_SOURCE = (function() {
+try { return '<!DOCTYPE html>\n' + document.documentElement.outerHTML; }
+catch (e) { return '<!-- تعذّر قراءة الكود المصدري -->'; }
+})();
+const C1 = 141.5;
+const C2 = 131.5;
+const C3 = 2.85;
+const K0 = 613.97226;
+const K1 = 0;
+const T_REF = 15;
+const VCF_MIN = 0.90;
+const VCF_MAX = 1.05;
+const STORAGE_KEY = 'tuba_oil_archive_v1';
+const LOCK_STATE_KEY = 'tuba_lock_state_v1';
+const LOGIN_PASSWORD = 'tuba';
+const LOCK_PASSWORD  = 'sajad';
+
+// ============================================================
+// ☁️ مزامنة حالة التعطيل بين الأجهزة عبر Firebase
+// ============================================================
+const CLOUD_URL = 'https://tuba-lab-default-rtdb.asia-southeast1.firebasedatabase.app/tuba_lock_x7k2.json';
+
+async function cloudGetLock() {
+try {
+const r = await fetch(CLOUD_URL + '?t=' + Date.now(), { cache: 'no-store' });
+const v = await r.json();
+return (v === 1 || v === true);
+} catch (e) { return null; }
+}
+
+async function cloudSetLock(state) {
+try {
+await fetch(CLOUD_URL, {
+method: 'PUT',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(state ? 1 : 0)
+});
+return true;
+} catch (e) { return false; }
+}
+
+const $ = id => document.getElementById(id);
+const loginPage     = $('loginPage');
+const lockPage      = $('lockPage');
+const mainSection   = $('mainSection');
+const passInput     = $('passInput');
+const loginBtn      = $('loginBtn');
+const loginError    = $('loginError');
+const unlockInput   = $('unlockInput');
+const unlockBtn     = $('unlockBtn');
+const unlockError   = $('unlockError');
+const sampleName    = $('sampleName');
+const apiInput      = $('apiInput');
+const spgrInput     = $('spgrInput');
+const tempInput     = $('tempInput');
+const spgrManual    = $('spgrManualInput');
+const ppmInput      = $('ppmInput');
+const ptbInput      = $('ptbInput');
+const infoSPGR15    = $('infoSPGR15');
+const infoVCF       = $('infoVCF');
+const infoTempC     = $('infoTempC');
+const infoStatus    = $('infoStatus');
+const infoStatusText= $('infoStatusText');
+const datetimeDisplay = $('datetimeDisplay');
+const reportView    = $('reportView');
+const toastEl       = $('toast');
+const loadingOverlay= $('loadingOverlay');
+const loadingMsg    = $('loadingMsg');
+const btnLock       = $('btnLock');
+const passwordOverlay = $('passwordOverlay');
+const lockPassInput = $('lockPassInput');
+const pwdConfirmBtn = $('pwdConfirmBtn');
+const pwdCancelBtn  = $('pwdCancelBtn');
+const pwdError      = $('pwdError');
+const pwdTitle      = $('pwdTitle');
+const pwdSub        = $('pwdSub');
+const authAlert     = $('authAlert');
+const splashOverlay = $('splashOverlay');
+const splashMsg1    = $('splashMsg1');
+const splashMsg2    = $('splashMsg2');
+const sourceTextarea = $('sourceTextarea');
+let tempUnit = 'C';
+let updating = false;
+let isLocked = false;
+const roundTo = (v, d) => {
+if (v === null || isNaN(v)) return null;
+const f = Math.pow(10, d);
+return Math.round(v * f) / f;
+};
+const roundAPI = v => roundTo(v, 2);
+const roundSPGR = v => roundTo(v, 4);
+const roundTemp = v => roundTo(v, 2);
+const roundPPM = v => (v === null || isNaN(v)) ? null : Math.round(v);
+function showToast(msg, type = 'success') {
+toastEl.textContent = msg;
+toastEl.className = 'toast show' + (type === 'error' ? ' error' : (type === 'warn' ? ' warn' : ''));
+clearTimeout(toastEl._t);
+toastEl._t = setTimeout(() => toastEl.classList.remove('show'), 3200);
+}
+function showLoading(msg = 'جارٍ التجهيز...') { loadingMsg.textContent = msg; loadingOverlay.classList.add('active'); }
+function hideLoading() { loadingOverlay.classList.remove('active'); }
+function showAuthAlert() {
+authAlert.classList.add('show');
+clearTimeout(authAlert._t);
+authAlert._t = setTimeout(() => authAlert.classList.remove('show'), 2200);
+}
+const fToC = f => (f - 32) * 5 / 9;
+const cToF = c => c * 9 / 5 + 32;
+function getTempC() {
+if (tempInput.value === '') return null;
+const v = parseFloat(tempInput.value);
+if (isNaN(v)) return null;
+return tempUnit === 'F' ? fToC(v) : v;
+}
+function calcVCF(spgr15, tempC) {
+const rho = spgr15 * 1000;
+const alpha = K0 / (rho * rho) + K1 / rho;
+const dT = tempC - T_REF;
+return Math.exp(-alpha * dT - 0.8 * alpha * alpha * dT * dT);
+}
+function correctSPGRto15(spgrAtT, tempC) {
+let spgr15 = spgrAtT;
+for (let i = 0; i < 30; i++) {
+const vcf = calcVCF(spgr15, tempC);
+const next = spgrAtT / vcf;
+if (Math.abs(next - spgr15) < 1e-8) return next;
+spgr15 = next;
+}
+return spgr15;
+}
+const spgrFromAPI = api => (api === null || isNaN(api) || (api + C2) === 0) ? null : C1 / (api + C2);
+const apiFromSPGR = sg => (sg === null || isNaN(sg) || sg === 0) ? null : C1 / sg - C2;
+const ppmFromPTB  = (ptb, sg) => (!sg) ? null : ptb * C3 / sg;
+const ptbFromPPM  = (ppm, sg) => (!sg) ? null : ppm * sg / C3;
+function setFieldError(input, isError) { if (isError) input.classList.add('error'); else input.classList.remove('error'); }
+function validateInputs() {
+const errors = [];
+const apiV  = apiInput.value  !== '' ? parseFloat(apiInput.value)  : null;
+const spgrV = spgrInput.value !== '' ? parseFloat(spgrInput.value) : null;
+const tempV = tempInput.value !== '' ? parseFloat(tempInput.value) : null;
+const manV  = spgrManual.value !== '' ? parseFloat(spgrManual.value) : null;
+const ppmV  = ppmInput.value  !== '' ? parseFloat(ppmInput.value)  : null;
+const ptbV  = ptbInput.value  !== '' ? parseFloat(ptbInput.value)  : null;
+let ok = true;
+setFieldError(apiInput, false);
+if (apiV !== null && (isNaN(apiV) || apiV < 0 || apiV > 100)) { setFieldError(apiInput, true); errors.push('API خارج النطاق'); ok = false; }
+setFieldError(spgrInput, false);
+if (spgrV !== null && (isNaN(spgrV) || spgrV < 0.70 || spgrV > 1.10)) { setFieldError(spgrInput, true); errors.push('SP.GR خارج النطاق'); ok = false; }
+setFieldError(tempInput, false);
+if (tempV !== null) { const c = tempUnit === 'F' ? fToC(tempV) : tempV; if (isNaN(c) || c < -50 || c > 150) { setFieldError(tempInput, true); errors.push('الحرارة خارج النطاق'); ok = false; } }
+setFieldError(spgrManual, false);
+if (manV !== null && (isNaN(manV) || manV < 0.70 || manV > 1.10)) { setFieldError(spgrManual, true); errors.push('SP.GR@15 اليدوي خارج النطاق'); ok = false; }
+setFieldError(ppmInput, false);
+if (ppmV !== null && (isNaN(ppmV) || ppmV < 0 || ppmV > 100000)) { setFieldError(ppmInput, true); errors.push('PPM خارج النطاق'); ok = false; }
+setFieldError(ptbInput, false);
+if (ptbV !== null && (isNaN(ptbV) || ptbV < 0 || ptbV > 5000)) { setFieldError(ptbInput, true); errors.push('PTB خارج النطاق'); ok = false; }
+return { ok, errors };
+}
+function recalculate(source) {
+if (updating) return;
+updating = true;
+const tempC = getTempC();
+let apiVal  = apiInput.value  !== '' ? parseFloat(apiInput.value)  : null;
+let spgrVal = spgrInput.value !== '' ? parseFloat(spgrInput.value) : null;
+let manVal  = spgrManual.value !== '' ? parseFloat(spgrManual.value) : null;
+let ppmVal  = ppmInput.value  !== '' ? parseFloat(ppmInput.value)  : null;
+let ptbVal  = ptbInput.value  !== '' ? parseFloat(ptbInput.value)  : null;
+if (apiVal  !== null && isNaN(apiVal))  apiVal  = null;
+if (spgrVal !== null && isNaN(spgrVal)) spgrVal = null;
+if (manVal  !== null && isNaN(manVal))  manVal  = null;
+if (ppmVal  !== null && isNaN(ppmVal))  ppmVal  = null;
+if (ptbVal  !== null && isNaN(ptbVal))  ptbVal  = null;
+let spgr15 = null;
+if (manVal !== null && manVal > 0) {
+spgr15 = manVal;
+const newApi = apiFromSPGR(spgr15);
+if (newApi !== null) apiInput.value = roundAPI(newApi);
+if (tempC !== null && Math.abs(tempC - T_REF) > 0.01) {
+const vcf = calcVCF(spgr15, tempC);
+if (source !== 'spgr') spgrInput.value = roundSPGR(spgr15 * vcf);
+} else { if (source !== 'spgr') spgrInput.value = roundSPGR(spgr15); }
+}
+else if (source === 'api' && apiVal !== null) {
+spgr15 = spgrFromAPI(apiVal);
+if (spgr15 !== null) {
+if (tempC !== null && Math.abs(tempC - T_REF) > 0.01) { const vcf = calcVCF(spgr15, tempC); spgrInput.value = roundSPGR(spgr15 * vcf); }
+else { spgrInput.value = roundSPGR(spgr15); }
+}
+}
+else if ((source === 'spgr' || source === 'temp') && spgrVal !== null && spgrVal > 0) {
+if (tempC !== null && Math.abs(tempC - T_REF) > 0.01) spgr15 = correctSPGRto15(spgrVal, tempC);
+else spgr15 = spgrVal;
+const newApi = apiFromSPGR(spgr15);
+if (newApi !== null) apiInput.value = roundAPI(newApi);
+}
+else {
+if (apiVal !== null) spgr15 = spgrFromAPI(apiVal);
+else if (spgrVal !== null && spgrVal > 0) spgr15 = (tempC !== null && Math.abs(tempC - T_REF) > 0.01) ? correctSPGRto15(spgrVal, tempC) : spgrVal;
+}
+if (spgr15 === null && apiVal !== null) spgr15 = spgrFromAPI(apiVal);
+if (spgr15 !== null && !isNaN(spgr15) && spgr15 > 0) {
+if (source === 'ptb' && ptbVal !== null) { const n = ppmFromPTB(ptbVal, spgr15); if (n !== null) ppmInput.value = roundPPM(n); }
+else if (source === 'ppm' && ppmVal !== null) { const n = ptbFromPPM(ppmVal, spgr15); if (n !== null) ptbInput.value = roundPPM(n); }
+else {
+if (ptbVal !== null) { const n = ppmFromPTB(ptbVal, spgr15); if (n !== null) ppmInput.value = roundPPM(n); }
+else if (ppmVal !== null) { const n = ptbFromPPM(ppmVal, spgr15); if (n !== null) ptbInput.value = roundPPM(n); }
+}
+} else {
+if (source === 'ptb') ppmInput.value = '';
+if (source === 'ppm') ptbInput.value = '';
+}
+updateInfoBar(spgr15, tempC);
+updating = false;
+}
+function updateInfoBar(spgr15, tempC) {
+if (spgr15 !== null && !isNaN(spgr15) && spgr15 > 0) infoSPGR15.textContent = roundSPGR(spgr15).toFixed(4);
+else infoSPGR15.textContent = '—';
+let vcf = null;
+if (spgr15 !== null && tempC !== null && !isNaN(spgr15) && spgr15 > 0) { vcf = calcVCF(spgr15, tempC); infoVCF.textContent = vcf.toFixed(6); }
+else infoVCF.textContent = '—';
+if (tempC !== null && !isNaN(tempC)) infoTempC.textContent = roundTemp(tempC).toFixed(2) + ' °C';
+else infoTempC.textContent = '—';
+const { ok } = validateInputs();
+if (!ok) { infoStatus.style.display = 'none'; infoStatusText.textContent = '⚠️ خطأ في الإدخال'; infoStatusText.style.color = '#FF8A80'; }
+else if (vcf === null) { infoStatus.style.display = 'none'; infoStatusText.textContent = '—'; infoStatusText.style.color = '#FFD54F'; }
+else if (vcf >= VCF_MIN && vcf <= VCF_MAX) { infoStatus.style.display = 'inline-block'; infoStatus.textContent = '✅ صحيح'; infoStatus.className = 'status-valid'; infoStatusText.textContent = ''; }
+else { infoStatus.style.display = 'none'; infoStatusText.textContent = '⚠️ VCF خارج النطاق (' + vcf.toFixed(3) + ')'; infoStatusText.style.color = '#FF8A80'; }
+}
+apiInput.addEventListener('input',   () => recalculate('api'));
+spgrInput.addEventListener('input',  () => recalculate('spgr'));
+tempInput.addEventListener('input',  () => recalculate('temp'));
+spgrManual.addEventListener('input', () => recalculate('manual'));
+ppmInput.addEventListener('input',   () => recalculate('ppm'));
+ptbInput.addEventListener('input',   () => recalculate('ptb'));
+document.querySelectorAll('.unit-btn').forEach(btn => {
+btn.addEventListener('click', function() {
+const newUnit = this.dataset.unit;
+if (newUnit === tempUnit) return;
+if (tempInput.value !== '') {
+const v = parseFloat(tempInput.value);
+if (!isNaN(v)) {
+if (tempUnit === 'C' && newUnit === 'F') tempInput.value = roundTemp(cToF(v));
+else if (tempUnit === 'F' && newUnit === 'C') tempInput.value = roundTemp(fToC(v));
+}
+}
+document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+this.classList.add('active');
+tempUnit = newUnit;
+recalculate('temp');
+});
+});
+function updateDateTime() {
+const now = new Date();
+const d = String(now.getDate()).padStart(2, '0');
+const m = String(now.getMonth() + 1).padStart(2, '0');
+const y = now.getFullYear();
+const h = String(now.getHours()).padStart(2, '0');
+const min = String(now.getMinutes()).padStart(2, '0');
+const s = String(now.getSeconds()).padStart(2, '0');
+datetimeDisplay.textContent = `${d}/${m}/${y}  ${h}:${min}:${s}`;
+}
+updateDateTime();
+setInterval(updateDateTime, 1000);
+$('btnClear').addEventListener('click', () => {
+sampleName.value = '';
+apiInput.value = '';
+spgrInput.value = '';
+tempInput.value = '';
+spgrManual.value = '';
+ppmInput.value = '';
+ptbInput.value = '';
+[apiInput, spgrInput, tempInput, spgrManual, ppmInput, ptbInput, sampleName].forEach(el => setFieldError(el, false));
+updateInfoBar(null, null);
+sampleName.focus();
+});
+$('btnInstructions').addEventListener('click', () => $('instructionsOverlay').classList.add('active'));
+$('btnWorkflow').addEventListener('click', () => $('workflowOverlay').classList.add('active'));
+$('btnViewArchive').addEventListener('click', () => { renderArchive(); $('archiveOverlay').classList.add('active'); });
+document.querySelectorAll('[data-close]').forEach(btn => {
+btn.addEventListener('click', () => $(btn.dataset.close).classList.remove('active'));
+});
+document.querySelectorAll('.overlay').forEach(ov => {
+if (ov.id === 'passwordOverlay') return;
+ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('active'); });
+});
+$('btnViewSource').addEventListener('click', () => { sourceTextarea.value = ORIGINAL_SOURCE; $('sourceOverlay').classList.add('active'); });
+$('btnCopySource').addEventListener('click', async () => {
+try {
+if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(sourceTextarea.value);
+else { sourceTextarea.select(); document.execCommand('copy'); }
+showToast('✅ تم نسخ الكود إلى الحافظة');
+} catch (e) { sourceTextarea.select(); document.execCommand('copy'); showToast('✅ تم نسخ الكود'); }
+});
+$('btnDownloadSource').addEventListener('click', () => {
+try {
+const blob = new Blob([ORIGINAL_SOURCE], { type: 'text/html;charset=utf-8' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'مختبر_الطوبة.html';
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+showToast('✅ تم تنزيل الملف');
+} catch (e) { showToast('❌ تعذّر تنزيل الملف', 'error'); }
+});
+btnLock.addEventListener('click', () => {
+pwdTitle.textContent = '🔒 تعطيل البرنامج';
+pwdSub.textContent = 'أدخل كلمة المرور الخاصة للتعطيل الكامل';
+lockPassInput.value = '';
+pwdError.textContent = '';
+lockPassInput.classList.remove('error');
+passwordOverlay.classList.add('active');
+setTimeout(() => lockPassInput.focus(), 120);
+});
+pwdCancelBtn.addEventListener('click', () => {
+passwordOverlay.classList.remove('active');
+lockPassInput.value = '';
+pwdError.textContent = '';
+lockPassInput.classList.remove('error');
+});
+async function confirmPassword() {
+const val = lockPassInput.value.trim();
+if (val === LOCK_PASSWORD) {
+lockPassInput.value = '';
+pwdError.textContent = '';
+lockPassInput.classList.remove('error');
+await applyLock();
+} else {
+showAuthAlert();
+pwdError.textContent = '❌ غير مصرح لك بالدخول';
+lockPassInput.classList.add('error');
+lockPassInput.value = '';
+lockPassInput.focus();
+setTimeout(() => lockPassInput.classList.remove('error'), 600);
+}
+}
+pwdConfirmBtn.addEventListener('click', confirmPassword);
+lockPassInput.addEventListener('keydown', e => {
+if (e.key === 'Enter') { e.preventDefault(); confirmPassword(); }
+if (e.key === 'Escape') { pwdCancelBtn.click(); }
+});
+async function applyLock() {
+isLocked = true;
+try { localStorage.setItem(LOCK_STATE_KEY, '1'); } catch (e) {}
+const ok = await cloudSetLock(true);
+if (!ok) showToast('⚠️ لم تتم المزامنة مع السحابة', 'warn');
+passwordOverlay.classList.remove('active');
+['instructionsOverlay', 'workflowOverlay', 'archiveOverlay', 'sourceOverlay'].forEach(id => {
+const el = $(id);
+if (el) el.classList.remove('active');
+});
+showLockPage();
+showToast('🔒 تم تعطيل البرنامج على كل الأجهزة');
+}
+function showLockPage() {
+loginPage.style.display   = 'none';
+mainSection.style.display = 'none';
+lockPage.style.display    = 'block';
+unlockInput.value = '';
+unlockError.textContent = '';
+unlockInput.classList.remove('error');
+setTimeout(() => unlockInput.focus(), 150);
+}
+function showLoginPage() {
+lockPage.style.display    = 'none';
+mainSection.style.display = 'none';
+loginPage.style.display   = 'block';
+passInput.value = '';
+loginError.textContent = '';
+passInput.classList.remove('error');
+setTimeout(() => passInput.focus(), 150);
+}
+function resetAllFields() {
+sampleName.value = '';
+apiInput.value = '';
+spgrInput.value = '';
+tempInput.value = '';
+spgrManual.value = '';
+ppmInput.value = '';
+ptbInput.value = '';
+[apiInput, spgrInput, tempInput, spgrManual, ppmInput, ptbInput, sampleName].forEach(el => setFieldError(el, false));
+updateInfoBar(null, null);
+}
+function playIntro(done) {
+splashOverlay.classList.add('active');
+splashMsg1.classList.remove('show');
+splashMsg2.classList.remove('show');
+splashMsg1.style.display = 'block';
+splashMsg2.style.display = 'none';
+requestAnimationFrame(() => requestAnimationFrame(() => { splashMsg1.classList.add('show'); }));
+setTimeout(() => {
+splashMsg1.classList.remove('show');
+setTimeout(() => {
+splashMsg1.style.display = 'none';
+splashMsg2.style.display = 'block';
+requestAnimationFrame(() => requestAnimationFrame(() => { splashMsg2.classList.add('show'); }));
+setTimeout(() => {
+splashMsg2.classList.remove('show');
+setTimeout(() => {
+splashOverlay.classList.remove('active');
+splashMsg2.style.display = 'none';
+if (typeof done === 'function') done();
+}, 850);
+}, 5000);
+}, 850);
+}, 5000);
+}
+async function doLogin() {
+const password = passInput.value.trim();
+if (password === LOGIN_PASSWORD) {
+const cloud = await cloudGetLock();
+if (cloud === true) {
+isLocked = true;
+try { localStorage.setItem(LOCK_STATE_KEY, '1'); } catch (e) {}
+showLockPage();
+return;
+}
+loginError.textContent = '';
+passInput.value = '';
+passInput.classList.remove('error');
+resetAllFields();
+tempUnit = 'C';
+document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+const cBtn = document.querySelector('.unit-btn[data-unit="C"]');
+if (cBtn) cBtn.classList.add('active');
+isLocked = false;
+btnLock.innerHTML = '🔒 تعطيل';
+loginPage.style.display   = 'none';
+mainSection.style.display = 'none';
+playIntro(function () {
+mainSection.style.display = 'block';
+updateDateTime();
+sampleName.focus();
+});
+} else {
+showAuthAlert();
+loginError.textContent = '❌ غير مصرح لك بالدخول';
+passInput.value = '';
+passInput.classList.add('error');
+setTimeout(() => passInput.classList.remove('error'), 600);
+passInput.focus();
+}
+}
+loginBtn.addEventListener('click', doLogin);
+passInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doLogin(); } });
+async function doUnlock() {
+const val = unlockInput.value.trim();
+if (val !== LOCK_PASSWORD) {
+showAuthAlert();
+unlockError.textContent = '❌ غير مصرح لك بالدخول';
+unlockInput.value = '';
+unlockInput.classList.add('error');
+unlockInput.focus();
+setTimeout(() => unlockInput.classList.remove('error'), 600);
+return;
+}
+await cloudSetLock(false);
+try { localStorage.removeItem(LOCK_STATE_KEY); } catch (e) {}
+isLocked = false;
+unlockError.textContent = '';
+unlockInput.classList.remove('error');
+showLoginPage();
+showToast('🔓 تم إعادة التفعيل على كل الأجهزة');
+}
+unlockBtn.addEventListener('click', doUnlock);
+unlockInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doUnlock(); } });
+function buildReport() {
+const tempC = getTempC();
+const manV  = spgrManual.value !== '' ? parseFloat(spgrManual.value) : null;
+const spgrV = spgrInput.value !== '' ? parseFloat(spgrInput.value) : null;
+const apiV  = apiInput.value  !== '' ? parseFloat(apiInput.value)  : null;
+const ppmV  = ppmInput.value  !== '' ? parseFloat(ppmInput.value)  : null;
+const ptbV  = ptbInput.value  !== '' ? parseFloat(ptbInput.value)  : null;
+let spgr15 = null;
+if (manV !== null && manV > 0) spgr15 = manV;
+else if (spgrV !== null && spgrV > 0 && tempC !== null) spgr15 = (Math.abs(tempC - T_REF) > 0.01) ? correctSPGRto15(spgrV, tempC) : spgrV;
+else if (apiV !== null) spgr15 = spgrFromAPI(apiV);
+let vcf = null;
+if (spgr15 !== null && tempC !== null) vcf = calcVCF(spgr15, tempC);
+$('rptSampleName').textContent = sampleName.value.trim() || 'غير محدد';
+$('rptDate').textContent = datetimeDisplay.textContent;
+$('rptFooterDate').textContent = datetimeDisplay.textContent;
+$('rptTemp').textContent   = tempC !== null ? roundTemp(tempC).toFixed(2) + ' °C' : '—';
+$('rptSPGR').textContent   = spgrV !== null ? spgrV.toFixed(4) : '—';
+$('rptVCF').textContent    = vcf !== null ? vcf.toFixed(6) : '—';
+$('rptSPGR15').textContent = spgr15 !== null ? roundSPGR(spgr15).toFixed(4) : '—';
+$('rptAPI').textContent    = apiV !== null ? roundAPI(apiV).toFixed(2) : '—';
+$('rptPPM').textContent    = ppmV !== null ? roundPPM(ppmV) : '—';
+$('rptPTB').textContent    = ptbV !== null ? roundPPM(ptbV) : '—';
+const status = $('rptStatus');
+if (vcf !== null && vcf >= VCF_MIN && vcf <= VCF_MAX) { status.textContent = '✅ صحيح'; status.className = 'rpt-status valid'; }
+else if (vcf !== null) { status.textContent = '⚠️ VCF خارج النطاق'; status.className = 'rpt-status invalid'; }
+else { status.textContent = '—'; status.className = 'rpt-status'; }
+}
+async function captureReportCanvas() {
+if (typeof html2canvas === 'undefined') throw new Error('مكتبة html2canvas غير محمّلة');
+const originalCss = { left: reportView.style.left, top: reportView.style.top, zIndex: reportView.style.zIndex, pointerEvents: reportView.style.pointerEvents, display: reportView.style.display };
+reportView.style.left = '-10000px';
+reportView.style.top  = '0px';
+reportView.style.zIndex = '1';
+reportView.style.pointerEvents = 'none';
+reportView.style.display = 'block';
+await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+const canvas = await html2canvas(reportView, {
+scale: 2, backgroundColor: '#FFFFFF', useCORS: true, allowTaint: false, logging: false,
+width: reportView.scrollWidth, height: reportView.scrollHeight,
+windowWidth: reportView.scrollWidth, windowHeight: reportView.scrollHeight
+});
+reportView.style.left = originalCss.left;
+reportView.style.top  = originalCss.top;
+reportView.style.zIndex = originalCss.zIndex;
+reportView.style.pointerEvents = originalCss.pointerEvents;
+reportView.style.display = originalCss.display;
+return canvas;
+}
+$('btnSaveImage').addEventListener('click', async () => {
+try {
+buildReport();
+showLoading('جارٍ إنشاء الصورة...');
+const canvas = await captureReportCanvas();
+const dataUrl = canvas.toDataURL('image/png');
+const nm = (sampleName.value.trim() || 'نموذج').replace(/[^\u0600-\u06FF\w\d\-_ ]/g, '');
+const link = document.createElement('a');
+link.download = `تحليل_${nm}_${Date.now()}.png`;
+link.href = dataUrl;
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+hideLoading();
+showToast('✅ تم حفظ الصورة بنجاح');
+} catch (err) { hideLoading(); console.error('خطأ في حفظ الصورة:', err); showToast('❌ فشل حفظ الصورة: ' + (err.message || 'خطأ غير معروف'), 'error'); }
+});
+$('btnSavePDF').addEventListener('click', async () => {
+try {
+buildReport();
+showLoading('جارٍ إنشاء PDF...');
+if (!window.jspdf || !window.jspdf.jsPDF) throw new Error('مكتبة jsPDF غير محمّلة');
+const { jsPDF } = window.jspdf;
+const canvas = await captureReportCanvas();
+const imgData = canvas.toDataURL('image/jpeg', 0.95);
+const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+const pageW = pdf.internal.pageSize.getWidth();
+const pageH = pdf.internal.pageSize.getHeight();
+const margin = 10;
+const availW = pageW - margin * 2;
+const availH = pageH - margin * 2;
+const imgRatio = canvas.height / canvas.width;
+const imgW = availW;
+const imgH = imgW * imgRatio;
+if (imgH <= availH) { pdf.addImage(imgData, 'JPEG', margin, margin, imgW, imgH); }
+else {
+const pageCanvas = document.createElement('canvas');
+const pageCtx = pageCanvas.getContext('2d');
+const totalPageCanvasHeight = Math.floor(canvas.width * (availH / imgW));
+let srcY = 0;
+let isFirst = true;
+while (srcY < canvas.height) {
+const remaining = canvas.height - srcY;
+const sliceH = Math.min(totalPageCanvasHeight, remaining);
+pageCanvas.width = canvas.width;
+pageCanvas.height = sliceH;
+pageCtx.fillStyle = '#FFFFFF';
+pageCtx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+pageCtx.drawImage(canvas, 0, srcY, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+const sliceData = pageCanvas.toDataURL('image/jpeg', 0.95);
+const sliceImgH = (sliceH / canvas.width) * imgW;
+if (!isFirst) pdf.addPage();
+pdf.addImage(sliceData, 'JPEG', margin, margin, imgW, sliceImgH);
+srcY += sliceH;
+isFirst = false;
+}
+}
+const nm = (sampleName.value.trim() || 'نموذج').replace(/[^\u0600-\u06FF\w\d\-_ ]/g, '');
+pdf.save(`تحليل_${nm}_${Date.now()}.pdf`);
+hideLoading();
+showToast('✅ تم حفظ PDF بنجاح');
+} catch (err) { hideLoading(); console.error('خطأ في حفظ PDF:', err); showToast('❌ فشل حفظ PDF: ' + (err.message || 'خطأ غير معروف'), 'error'); }
+});
+function getArchive() {
+try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+catch { return []; }
+}
+function setArchive(arr) {
+try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+catch (e) { showToast('⚠️ تعذّر الحفظ: المساحة ممتلئة', 'warn'); }
+}
+$('btnArchive').addEventListener('click', () => {
+const name = sampleName.value.trim();
+if (!name) {
+showToast('⚠️ الرجاء إدخال اسم النموذج قبل الأرشفة', 'warn');
+sampleName.focus();
+sampleName.classList.add('error');
+setTimeout(() => sampleName.classList.remove('error'), 1500);
+return;
+}
+const { ok, errors } = validateInputs();
+if (!ok) { showToast('⚠️ لا يمكن الأرشفة: ' + errors.join(' | '), 'warn'); return; }
+const tempC = getTempC();
+const manV  = spgrManual.value !== '' ? parseFloat(spgrManual.value) : null;
+const spgrV = spgrInput.value !== '' ? parseFloat(spgrInput.value) : null;
+const apiV  = apiInput.value  !== '' ? parseFloat(apiInput.value)  : null;
+const ppmV  = ppmInput.value  !== '' ? parseFloat(ppmInput.value)  : null;
+const ptbV  = ptbInput.value  !== '' ? parseFloat(ptbInput.value)  : null;
+let spgr15 = null;
+if (manV !== null) spgr15 = manV;
+else if (spgrV !== null && tempC !== null) spgr15 = (Math.abs(tempC - T_REF) > 0.01) ? correctSPGRto15(spgrV, tempC) : spgrV;
+else if (apiV !== null) spgr15 = spgrFromAPI(apiV);
+const entry = {
+id: Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+name,
+timestamp: datetimeDisplay.textContent,
+ts: Date.now(),
+data: {
+api: apiV, spgr: spgrV,
+temp: tempInput.value !== '' ? parseFloat(tempInput.value) : null,
+tempUnit, tempC,
+spgrManual: manV, ppm: ppmV, ptb: ptbV, spgr15
+}
+};
+const arr = getArchive();
+arr.unshift(entry);
+if (arr.length > 200) arr.length = 200;
+setArchive(arr);
+showToast('✅ تمت أرشفة النموذج: ' + name);
+});
+function renderArchive() {
+const arr = getArchive();
+const list = $('archiveList');
+$('archiveCount').textContent = 'عدد النماذج: ' + arr.length;
+if (arr.length === 0) { list.innerHTML = '<div class="archive-empty">📭 لا يوجد نماذج مؤرشفة بعد</div>'; return; }
+list.innerHTML = arr.map(item => {
+const d = item.data || {};
+const fmt = v => (v === null || v === undefined || isNaN(v)) ? '—' : v;
+return `
+<div class="archive-item" data-id="${item.id}">
+<div class="info">
+<div class="name">📄 ${escapeHtml(item.name)}</div>
+<div class="meta">🕒 ${item.timestamp}</div>
+<div class="values">
+<span>API: ${fmt(d.api)}</span>
+<span>SP.GR: ${fmt(d.spgr)}</span>
+<span>SP.GR@15: ${d.spgr15 ? d.spgr15.toFixed(4) : '—'}</span>
+<span>PPM: ${fmt(d.ppm)}</span>
+<span>PTB: ${fmt(d.ptb)}</span>
+</div>
+</div>
+<div class="actions">
+<button class="btn-archive-load" data-load="${item.id}">↩️ استرجاع</button>
+<button class="btn-archive-del" data-del="${item.id}">🗑️</button>
+</div>
+</div>
+`;
+}).join('');
+list.querySelectorAll('[data-load]').forEach(b => { b.addEventListener('click', () => loadFromArchive(b.dataset.load)); });
+list.querySelectorAll('[data-del]').forEach(b => { b.addEventListener('click', () => deleteFromArchive(b.dataset.del)); });
+}
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])); }
+function loadFromArchive(id) {
+const arr = getArchive();
+const item = arr.find(x => x.id === id);
+if (!item) return;
+sampleName.value = item.name || '';
+const d = item.data || {};
+if (d.tempUnit && d.tempUnit !== tempUnit) {
+tempUnit = d.tempUnit;
+document.querySelectorAll('.unit-btn').forEach(b => { b.classList.toggle('active', b.dataset.unit === tempUnit); });
+}
+apiInput.value   = (d.api  !== null && d.api  !== undefined) ? d.api  : '';
+spgrInput.value  = (d.spgr !== null && d.spgr !== undefined) ? d.spgr : '';
+tempInput.value  = (d.temp !== null && d.temp !== undefined) ? d.temp : '';
+spgrManual.value = (d.spgrManual !== null && d.spgrManual !== undefined) ? d.spgrManual : '';
+ppmInput.value   = (d.ppm  !== null && d.ppm  !== undefined) ? d.ppm  : '';
+ptbInput.value   = (d.ptb  !== null && d.ptb  !== undefined) ? d.ptb  : '';
+$('archiveOverlay').classList.remove('active');
+showToast('✅ تم استرجاع النموذج: ' + item.name);
+recalculate('manual');
+}
+function deleteFromArchive(id) {
+if (!confirm('هل أنت متأكد من حذف هذا النموذج؟')) return;
+const arr = getArchive().filter(x => x.id !== id);
+setArchive(arr);
+renderArchive();
+showToast('🗑️ تم حذف النموذج');
+}
+$('btnClearAllArchive').addEventListener('click', () => {
+if (!confirm('هل أنت متأكد من حذف كل الأرشيف؟ لا يمكن التراجع!')) return;
+setArchive([]);
+renderArchive();
+showToast('🗑️ تم حذف كل الأرشيف');
+});
+[apiInput, spgrInput, tempInput, spgrManual, ppmInput, ptbInput].forEach(el => { el.addEventListener('blur', () => validateInputs()); });
+
+// ============================================================
+// 🚀 الإقلاع: فحص حالة القفل من السحابة
+// ============================================================
+(async function boot() {
+let locked = false;
+try { locked = localStorage.getItem(LOCK_STATE_KEY) === '1'; } catch (e) {}
+const cloud = await cloudGetLock();
+if (cloud !== null) locked = cloud;
+if (locked) {
+isLocked = true;
+try { localStorage.setItem(LOCK_STATE_KEY, '1'); } catch (e) {}
+showLockPage();
+} else {
+showLoginPage();
+}
+// 🔄 مراقبة دورية كل 8 ثوان
+setInterval(async () => {
+const cloud = await cloudGetLock();
+if (cloud === null) return;
+if (cloud && !isLocked) {
+isLocked = true;
+try { localStorage.setItem(LOCK_STATE_KEY, '1'); } catch (e) {}
+['instructionsOverlay','workflowOverlay','archiveOverlay','sourceOverlay'].forEach(id => { const el = $(id); if (el) el.classList.remove('active'); });
+passwordOverlay.classList.remove('active');
+showLockPage();
+showToast('🔒 تم تعطيل البرنامج من جهاز آخر');
+} else if (!cloud && isLocked) {
+isLocked = false;
+try { localStorage.removeItem(LOCK_STATE_KEY); } catch (e) {}
+showLoginPage();
+showToast('🔓 تم إعادة التفعيل من جهاز آخر');
+}
+}, 8000);
+})();
+
+})();
+</script>
+</body>
+</html>
