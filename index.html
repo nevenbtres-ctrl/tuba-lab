@@ -45,12 +45,18 @@ body { background: linear-gradient(145deg, #1a2a2f 0%, #0d171c 100%); min-height
 .field-item input::placeholder { color: #8D6E63; font-size: 14px; font-weight: 400; letter-spacing: 0; }
 .field-item input.error { color: #FF5252 !important; background: #4A1F1F !important; border-color: #FF5252 !important; animation: shake 0.4s ease; }
 .field-item.manual-field { background: #4A3A2A; border-color: #4DD0E1; }
+.field-item.result-field { background: #3E3226; border-color: #FFB74D; box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 183, 77, 0.15); }
+.field-item.result-field label { color: #FFD54F; }
+.field-item.result-field input { background: #241A12; color: #FFD54F; border-color: #8D6E63; cursor: default; text-shadow: 0 0 10px rgba(255, 213, 79, 0.35); }
+.field-item.result-field input:focus { border-color: #8D6E63; box-shadow: none; background: #241A12; }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 .temp-input-wrapper { display: flex; flex-direction: column; gap: 6px; margin-top: auto; }
 .temp-unit-toggle { display: flex; background: #3E2723; border-radius: 30px; padding: 3px; gap: 2px; border: 2px solid #4E342E; }
 .unit-btn { flex: 1; background: transparent; border: none; color: #8D6E63; padding: 5px 8px; font-size: 12px; cursor: pointer; border-radius: 30px; transition: 0.2s; font-weight: 700; font-family: inherit; }
 .unit-btn.active { background: #FFB74D; color: #3E2723; }
 .unit-btn:hover:not(.active) { color: #FFCC80; background: #4E342E; }
+.equation-bar { margin-top: 16px; background: linear-gradient(90deg, #2A1F17 0%, #3E3226 50%, #2A1F17 100%); border: 1px dashed #FFB74D; border-radius: 16px; padding: 12px 18px; text-align: center; color: #FFE0B2; font-size: 14px; font-weight: 600; }
+.equation-bar code { display: inline-block; background: #1A120B; color: #FFD54F; padding: 4px 12px; border-radius: 8px; font-family: 'Courier New', monospace; font-weight: 700; font-size: 14px; direction: ltr; letter-spacing: 0.5px; margin: 0 6px; }
 .info-bar { margin-top: 18px; background: #3E2723; border: 2px dashed #6D4C41; border-radius: 18px; padding: 14px 20px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px; font-size: 13px; }
 .info-bar .info-item { display: flex; align-items: center; gap: 8px; }
 .info-bar .info-item .label { color: #A1887F; font-weight: 600; }
@@ -105,6 +111,7 @@ body { background: linear-gradient(145deg, #1a2a2f 0%, #0d171c 100%); min-height
 .instr-warning h3 { color: #B71C1C; }
 .instr-tip { background: #E8F5E9; border-right-color: #4CAF50; }
 .instr-tip h3 { color: #1B5E20; }
+.instr-equation { background: #1A120B; color: #FFD54F; padding: 16px; border-radius: 12px; font-family: 'Courier New', monospace; font-size: 16px; text-align: center; direction: ltr; margin: 10px 0; font-weight: 700; letter-spacing: 0.5px; line-height: 1.9; overflow-x: auto; }
 .workflow-content { background: linear-gradient(160deg, #EDE7F6 0%, #FFFFFF 100%); }
 .workflow-content h2 { color: #4527A0; font-size: 28px; margin-bottom: 8px; text-align: center; border-bottom: 3px solid #7E57C2; padding-bottom: 12px; }
 .workflow-content .sub { text-align: center; color: #5E35B1; margin-bottom: 25px; font-size: 15px; }
@@ -115,6 +122,7 @@ body { background: linear-gradient(145deg, #1a2a2f 0%, #0d171c 100%); min-height
 .wf-node.end   { background: linear-gradient(145deg, #C62828, #B71C1C); }
 .wf-node.calc  { background: linear-gradient(145deg, #F57C00, #E65100); }
 .wf-node.result{ background: linear-gradient(145deg, #2E7D32, #1B5E20); }
+.wf-node.formula { background: linear-gradient(145deg, #263238, #0D171C); font-family: 'Courier New', monospace; direction: ltr; font-size: 13.5px; padding: 12px 18px; letter-spacing: 0.4px; }
 .wf-arrow { color: #5E35B1; font-size: 26px; font-weight: 700; }
 .wf-row { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
 .wf-branch { display: flex; align-items: center; gap: 8px; flex-direction: column; }
@@ -128,7 +136,7 @@ body { background: linear-gradient(145deg, #1a2a2f 0%, #0d171c 100%); min-height
 .archive-item .info .name { font-size: 16px; font-weight: 700; color: #263238; margin-bottom: 4px; }
 .archive-item .info .meta { font-size: 12px; color: #78909C; font-family: 'Courier New', monospace; }
 .archive-item .info .values { font-size: 12px; color: #455A64; margin-top: 6px; }
-.archive-item .values span { background: #ECEFF1; padding: 2px 8px; border-radius: 6px; margin-left: 6px; font-family: 'Courier New', monospace; font-weight: 700; }
+.archive-item .values span { background: #ECEFF1; padding: 2px 8px; border-radius: 6px; margin-left: 6px; font-family: 'Courier New', monospace; font-weight: 700; display: inline-block; margin-bottom: 4px; }
 .archive-item .actions { display: flex; gap: 8px; }
 .btn-archive-load { background: #00838F; color: #FFF; border: none; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s; font-family: inherit; }
 .btn-archive-load:hover { background: #006064; }
@@ -145,7 +153,7 @@ body { background: linear-gradient(145deg, #1a2a2f 0%, #0d171c 100%); min-height
 .source-toolbar button:hover { background: #006064; transform: translateY(-2px); }
 .source-toolbar button.download { background: #2E7D32; }
 .source-toolbar button.download:hover { background: #1B5E20; }
-#sourceTextarea { width: 100%; height: 65vh; min-height: 400px; background: #060d10; color: #A5D6A7; border: 2px solid #37474F; border-radius: 12px; padding: 15px; font-family: 'Courier New', monospace; font-size: 12.5px; line-height: 1.6; resize: vertical; outline: none; direction: ltr; text-align: left; white-space: pre; overflow: auto; tab-size: 4; }
+#sourceTextarea { width: 100%; height: 65vh; min-height: 400px; background: #060d10; color: #A5D6A7; border: 2px solid #37474F; border-radius: 12px; padding: 15px; font-family: 'Courier New', monospace; font-size: 12.5px; line-height: 1.6; resize: vertical; outline: none; direction: ltr; text-align: left; white-space: pre; overflow: auto; tab-size: 4; caret-color: transparent; cursor: default; user-select: text; }
 #sourceTextarea:focus { border-color: #4DD0E1; }
 .report-view { position: fixed; top: 0; left: -10000px; width: 820px; background: #FFFFFF; padding: 40px; font-family: 'Segoe UI', Tahoma, sans-serif; direction: rtl; z-index: -1; pointer-events: none; }
 .report-view .rpt-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px double #333; padding-bottom: 15px; margin-bottom: 20px; }
@@ -186,7 +194,7 @@ body { background: linear-gradient(145deg, #1a2a2f 0%, #0d171c 100%); min-height
 .splash-msg.credit { font-size: 34px; background: linear-gradient(90deg, #4DD0E1 0%, #A5D6A7 25%, #81D4FA 50%, #4DD0E1 75%, #4DD0E1 100%); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; animation: shine 3.5s linear infinite; filter: drop-shadow(0 0 24px rgba(77, 208, 225, 0.55)); border: 2px solid rgba(77, 208, 225, 0.35); box-shadow: 0 0 70px rgba(77, 208, 225, 0.22), inset 0 0 45px rgba(77, 208, 225, 0.08); }
 @keyframes shine { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
 .splash-msg .ltr { direction: ltr; unicode-bidi: embed; display: inline-block; font-family: 'Courier New', monospace; font-weight: 800; }
-@media (max-width: 640px) { .login-card { padding: 30px 20px; } .main-section { padding: 20px 14px 20px; border-radius: 24px; } .main-header h1 { font-size: 20px; } .fields-grid { grid-template-columns: 1fr 1fr; gap: 10px; } .sample-name-bar { flex-direction: column; align-items: stretch; } .overlay-content { padding: 20px; } .toolbar { grid-template-columns: 1fr 1fr; } .password-modal { padding: 25px 20px; } .auth-alert { padding: 22px 28px; font-size: 18px; } .auth-alert .auth-msg { font-size: 16px; } .splash-msg.dedication { font-size: 26px; padding: 18px 18px; line-height: 1.8; } .splash-msg.credit { font-size: 19px; padding: 18px 18px; line-height: 1.8; } }
+@media (max-width: 640px) { .login-card { padding: 30px 20px; } .main-section { padding: 20px 14px 20px; border-radius: 24px; } .main-header h1 { font-size: 20px; } .fields-grid { grid-template-columns: 1fr 1fr; gap: 10px; } .sample-name-bar { flex-direction: column; align-items: stretch; } .overlay-content { padding: 20px; } .toolbar { grid-template-columns: 1fr 1fr; } .password-modal { padding: 25px 20px; } .auth-alert { padding: 22px 28px; font-size: 18px; } .auth-alert .auth-msg { font-size: 16px; } .splash-msg.dedication { font-size: 26px; padding: 18px 18px; line-height: 1.8; } .splash-msg.credit { font-size: 19px; padding: 18px 18px; line-height: 1.8; } .equation-bar { font-size: 12px; padding: 10px 12px; } .equation-bar code { font-size: 12px; padding: 3px 8px; } }
 @media (max-width: 440px) { .fields-grid { grid-template-columns: 1fr; } .toolbar { grid-template-columns: 1fr; } .splash-msg.dedication { font-size: 21px; } .splash-msg.credit { font-size: 16px; } }
 </style>
 </head>
@@ -217,12 +225,18 @@ body { background: linear-gradient(145deg, #1a2a2f 0%, #0d171c 100%); min-height
 <input type="text" id="sampleName" placeholder="أدخل اسم النموذج أو رقمه...">
 </div>
 <div class="fields-grid">
-<div class="field-item"><label>API °</label><input type="number" id="apiInput" step="any" placeholder="A.P.I"></div>
-<div class="field-item"><label>SP.GR</label><input type="number" id="spgrInput" step="any" placeholder="SP.GR"></div>
-<div class="field-item"><label>درجة الحرارة</label><div class="temp-input-wrapper"><input type="number" id="tempInput" step="any" placeholder="TEMP"><div class="temp-unit-toggle"><button type="button" class="unit-btn active" data-unit="C">°C</button><button type="button" class="unit-btn" data-unit="F">°F</button></div></div></div>
+<div class="field-item"><label>🌡️ درجة الحرارة</label><div class="temp-input-wrapper"><input type="number" id="tempInput" step="any" placeholder="TEMP"><div class="temp-unit-toggle"><button type="button" class="unit-btn active" data-unit="C">°C</button><button type="button" class="unit-btn" data-unit="F">°F</button></div></div></div>
+<div class="field-item"><label>⚗️ الكثافة (قراءة المكثاف)</label><input type="number" id="densityInput" step="any" placeholder="مثال 0.8450"></div>
+<div class="field-item result-field"><label>📊 SP.GR (النتيجة)</label><input type="text" id="spgrInput" readonly placeholder="—"></div>
+<div class="field-item result-field"><label>🛢️ API °</label><input type="text" id="apiInput" readonly placeholder="—"></div>
 <div class="field-item manual-field"><label>SP.GR@15 (يدوي)</label><input type="number" id="spgrManualInput" step="any" placeholder="اختياري"></div>
 <div class="field-item"><label>P.P.M</label><input type="number" id="ppmInput" step="any" placeholder="P.P.M"></div>
 <div class="field-item"><label>P.T.B</label><input type="number" id="ptbInput" step="any" placeholder="P.T.B"></div>
+</div>
+<div class="equation-bar">
+📐 معادلة (حرارة + كثافة = SP.GR):
+<code>SP.GR = ρ + [ 0.000341096 × (T°F − 59) ] ÷ ρ</code>
+<span style="color:#A1887F;font-size:12px;">حيث ρ = قراءة المكثاف ، و T°F = (T°C × 9/5) + 32</span>
 </div>
 <div class="info-bar">
 <div class="info-item"><span class="label">SP.GR@15°C:</span><strong id="infoSPGR15">—</strong></div>
@@ -231,15 +245,15 @@ body { background: linear-gradient(145deg, #1a2a2f 0%, #0d171c 100%); min-height
 <div class="info-item"><span class="label">الحالة:</span><span id="infoStatus" class="status-valid" style="display:none;">✅</span><strong id="infoStatusText">—</strong></div>
 </div>
 <div class="toolbar">
-<button class="btn-tool btn-info" id="btnInstructions">📖 التعليمات</button>
-<button class="btn-tool btn-flow" id="btnWorkflow">📊 مخطط العملية</button>
-<button class="btn-tool btn-clear" id="btnClear">🧹 مسح</button>
-<button class="btn-tool btn-image" id="btnSaveImage">📷 حفظ كصورة</button>
-<button class="btn-tool btn-pdf" id="btnSavePDF">📄 حفظ PDF</button>
+<button class="btn-tool btn-info"    id="btnInstructions">📖 التعليمات</button>
+<button class="btn-tool btn-flow"    id="btnWorkflow">📊 مخطط العملية</button>
+<button class="btn-tool btn-clear"   id="btnClear">🧹 مسح</button>
+<button class="btn-tool btn-image"   id="btnSaveImage">📷 حفظ كصورة</button>
+<button class="btn-tool btn-pdf"     id="btnSavePDF">📄 حفظ PDF</button>
 <button class="btn-tool btn-archive" id="btnArchive">💾 أرشفة</button>
-<button class="btn-tool btn-view" id="btnViewArchive">📁 عرض الأرشيف</button>
-<button class="btn-tool btn-source" id="btnViewSource">🖥️ عرض الكود</button>
-<button class="btn-tool btn-lock" id="btnLock">🔒 تعطيل</button>
+<button class="btn-tool btn-view"    id="btnViewArchive">📁 عرض الأرشيف</button>
+<button class="btn-tool btn-source"  id="btnViewSource">🖥️ عرض الكود</button>
+<button class="btn-tool btn-lock"    id="btnLock">🔒 تعطيل</button>
 </div>
 <div class="datetime-bar" id="datetimeDisplay">--/--/---- --:--</div>
 <div class="design-credit">تصميم ابو سجاد</div>
@@ -259,15 +273,18 @@ body { background: linear-gradient(145deg, #1a2a2f 0%, #0d171c 100%); min-height
 <button class="overlay-close" data-close="instructionsOverlay">✕</button>
 <h2>📖 دليل استخدام البرنامج</h2>
 <p class="sub">شرح كامل لطريقة العمل والقياس في المختبر</p>
-<div class="instr-section"><h3>🔬 ١. الأجهزة المستخدمة في المختبر</h3><ul><li><strong>🌡️ مقياس الحرارة:</strong> لقياس درجة حرارة عينة النفط.</li><li><strong>⚖️ الهيدروميتر:</strong> لقياس الكثافة النوعية SP.GR عند حرارة العينة.</li><li><strong>🧪 جهاز الطرد المركزي:</strong> لقياس نسبة الماء والرواسب (PPM).</li></ul></div>
-<div class="instr-section"><h3>📋 ٢. خطوات الفحص العملي</h3><ul><li>املأ أسطوانة مدرّجة بحوالي 250 مل من عينة النفط.</li><li>أدخل الثرمومتر واقرأ درجة الحرارة (مثلاً <code>25°C</code>).</li><li>أدخل الهيدروميتر برفق واتركه يطفو، واقرأ SP.GR من الساق (مثلاً <code>0.8450</code>).</li><li>سجّل قيمتي الحرارة و SP.GR بدقة.</li></ul></div>
-<div class="instr-section"><h3>💻 ٣. إدخال البيانات في البرنامج</h3><ul><li>اكتب <strong>اسم النموذج</strong> في الأعلى.</li><li>أدخل <strong>درجة الحرارة</strong> واختر الوحدة الصحيحة.</li><li>أدخل قيمة <strong>SP.GR</strong> المقاسة من الهيدروميتر.</li><li>أدخل قيمة <strong>PPM</strong> من جهاز الطرد المركزي.</li><li>سيقوم البرنامج تلقائياً بحساب API و PTB و SP.GR@15°C.</li></ul></div>
-<div class="instr-section instr-tip"><h3>✨ ٤. الحقل اليدوي SP.GR@15</h3><p>إذا كانت لديك قيمة <strong>SP.GR عند 15°C</strong> من مصدر آخر، يمكنك إدخالها يدوياً لتجاوز الحساب التلقائي.</p></div>
-<div class="instr-section"><h3>🎯 ٥. التحقق من صحة القياس (VCF)</h3><p>يقوم البرنامج بحساب <strong>معامل التصحيح الحجمي (VCF)</strong> والتحقق من أنه ضمن النطاق المعقول:</p><ul><li><strong>✅ صحيح:</strong> VCF بين <code>0.90</code> و <code>1.05</code>.</li><li><strong>⚠️ غير صحيح:</strong> خارج هذا النطاق.</li></ul></div>
-<div class="instr-section instr-warning"><h3>⚠️ ٦. تنبيهات الخطأ</h3><p>عند إدخال قيمة غير منطقية، يتحول لون الرقم إلى <span style="color:#EF5350;font-weight:700;">الأحمر</span> مع ظهور تنبيه:</p><ul><li><strong>API:</strong> بين <code>0</code> و <code>100</code>.</li><li><strong>SP.GR:</strong> بين <code>0.70</code> و <code>1.10</code>.</li><li><strong>الحرارة:</strong> بين <code>-50°C</code> و <code>150°C</code>.</li></ul></div>
-<div class="instr-section"><h3>💾 ٧. الأرشفة والرجوع</h3><ul><li>اضغط <strong>أرشفة</strong> لحفظ النموذج بالتاريخ والوقت والاسم.</li><li>اضغط <strong>عرض الأرشيف</strong> للرجوع إلى أي نموذج محفوظ سابقاً.</li><li>البيانات تُحفظ في متصفحك (localStorage).</li></ul></div>
-<div class="instr-section instr-warning"><h3>🔒 ٨. تعطيل / إعادة تفعيل الواجهة</h3><ul><li>اضغط <strong>زر التعطيل</strong> لحماية الواجهة من العبث بشكل كامل.</li><li>أدخل كلمة المرور الخاصة للتعطيل.</li><li>بعد التعطيل تظهر شاشة قفل، ويتوقف البرنامج على جميع الأجهزة المتصلة.</li><li>لإعادة التفعيل، أدخل كلمة مرور الإعادة في شاشة القفل.</li></ul></div>
-<div class="instr-section instr-tip"><h3>🖥️ ٩. عرض الكود المصدري</h3><p>يمكنك الضغط على زر <strong>عرض الكود</strong> لرؤية الكود كاملاً في نافذة <strong>للقراءة فقط</strong>.</p></div>
+<div class="instr-section"><h3>🔬 ١. الأجهزة المستخدمة في المختبر</h3><ul><li><strong>🌡️ مقياس الحرارة:</strong> لقياس درجة حرارة عينة النفط.</li><li><strong>⚗️ المكثاف / الهيدروميتر:</strong> لقياس الكثافة الأولية للعينة عند حرارة القياس.</li><li><strong>🧪 جهاز الطرد المركزي:</strong> لقياس نسبة الماء والرواسب (PPM).</li></ul></div>
+<div class="instr-section"><h3>📋 ٢. خطوات الفحص العملي</h3><ul><li>املأ أسطوانة مدرّجة بحوالي 250 مل من عينة النفط.</li><li>أدخل الثرمومتر واقرأ درجة الحرارة (مثلاً <code>25°C</code>).</li><li>أدخل المكثاف برفق واتركه يطفو، واقرأ الكثافة من الساق (مثلاً <code>0.8450</code>).</li><li>سجّل قيمتي الحرارة والكثافة بدقة.</li></ul></div>
+<div class="instr-section instr-tip"><h3>🧮 ٣. معادلة (حرارة + كثافة = SP.GR)</h3><p>يتم أولاً تحويل درجة الحرارة من مئوية إلى فهرنهايت، ثم تُطبَّق المعادلة الآتية لاستخراج الكثافة النوعية:</p><div class="instr-equation">T(°F) = T(°C) × 9/5 + 32
+
+SP.GR = ρ + [ 0.000341096 × ( T(°F) − 59 ) ] ÷ ρ</div><p>حيث <code>ρ</code> هي الكثافة الأولية المقروءة من المكثاف، و <code>59°F</code> هي درجة الحرارة المرجعية (تعادل <code>15°C</code>).</p><p><strong>مثال:</strong> T = 25°C → T°F = 77 ، ρ = 0.8450 ⟹ SP.GR ≈ 0.8515</p></div>
+<div class="instr-section"><h3>💻 ٤. إدخال البيانات في البرنامج (الترتيب)</h3><ul><li>اكتب <strong>اسم النموذج</strong> في الأعلى.</li><li><strong>١) درجة الحرارة:</strong> أدخل الرقم واختر الوحدة (°C أو °F).</li><li><strong>٢) الكثافة:</strong> أدخل قراءة المكثاف (مثال 0.8450).</li><li><strong>٣) SP.GR:</strong> يُحسب تلقائياً من المعادلة (حقل نتيجة).</li><li><strong>٤) API:</strong> يُحسب تلقائياً من SP.GR (حقل نتيجة).</li><li><strong>٥) SP.GR@15 (يدوي):</strong> اختياري لتجاوز الحساب.</li><li><strong>٦) PPM</strong> و <strong>٧) PTB</strong> من جهاز الطرد المركزي.</li></ul></div>
+<div class="instr-section instr-tip"><h3>✨ ٥. الحقل اليدوي SP.GR@15</h3><p>إذا كانت لديك قيمة <strong>SP.GR عند 15°C</strong> من مصدر آخر، أدخلها في الحقل اليدوي، وسيتم تجاوز نتيجة المعادلة واستخدام قيمتك مباشرة.</p></div>
+<div class="instr-section"><h3>🎯 ٦. التحقق من صحة القياس (VCF)</h3><p>يقوم البرنامج بحساب <strong>معامل التصحيح الحجمي (VCF)</strong> والتحقق من أنه ضمن النطاق المعقول:</p><ul><li><strong>✅ صحيح:</strong> VCF بين <code>0.90</code> و <code>1.05</code>.</li><li><strong>⚠️ غير صحيح:</strong> خارج هذا النطاق — يعني خطأ في القياس.</li></ul></div>
+<div class="instr-section instr-warning"><h3>⚠️ ٧. تنبيهات الخطأ</h3><p>عند إدخال قيمة غير منطقية، يتحول لون الرقم إلى <span style="color:#EF5350;font-weight:700;">الأحمر</span> مع ظهور تنبيه:</p><ul><li><strong>الحرارة:</strong> بين <code>-50°C</code> و <code>150°C</code>.</li><li><strong>الكثافة (ρ):</strong> بين <code>0.60</code> و <code>1.20</code>.</li><li><strong>SP.GR@15 اليدوي:</strong> بين <code>0.60</code> و <code>1.20</code>.</li><li><strong>PPM:</strong> بين <code>0</code> و <code>100000</code>.</li><li><strong>PTB:</strong> بين <code>0</code> و <code>5000</code>.</li></ul></div>
+<div class="instr-section"><h3>💾 ٨. الأرشفة والرجوع</h3><ul><li>اضغط <strong>أرشفة</strong> لحفظ النموذج بالتاريخ والوقت والاسم.</li><li>اضغط <strong>عرض الأرشيف</strong> للرجوع إلى أي نموذج محفوظ سابقاً.</li><li>البيانات تُحفظ في متصفحك (localStorage).</li></ul></div>
+<div class="instr-section instr-warning"><h3>🔒 ٩. تعطيل / إعادة تفعيل الواجهة</h3><ul><li>اضغط <strong>زر التعطيل</strong> لحماية الواجهة من العبث بشكل كامل.</li><li>أدخل كلمة المرور الخاصة للتعطيل.</li><li>بعد التعطيل تظهر شاشة قفل، ويتوقف البرنامج على <strong>جميع الأجهزة</strong> المتصلة.</li><li>لإعادة التفعيل، أدخل كلمة مرور الإعادة في شاشة القفل.</li></ul></div>
+<div class="instr-section instr-tip"><h3>🖥️ ١٠. عرض الكود المصدري</h3><p>يمكنك الضغط على زر <strong>عرض الكود</strong> لرؤية الكود المصدري للبرنامج كاملاً في نافذة <strong>للقراءة فقط</strong>، مع إمكانية النسخ أو التنزيل.</p></div>
 </div>
 </div>
 <div id="workflowOverlay" class="overlay">
@@ -278,13 +295,17 @@ body { background: linear-gradient(145deg, #1a2a2f 0%, #0d171c 100%); min-height
 <div class="wf-diagram">
 <div class="wf-node start">🧪 عينة النفط الخام</div>
 <div class="wf-arrow">▼</div>
-<div class="wf-row"><div class="wf-branch"><div class="wf-node">🌡️ الثرمومتر</div><div class="wf-arrow">▼</div><div class="wf-node">قياس الحرارة</div></div><div class="wf-branch"><div class="wf-node">⚖️ الهيدروميتر</div><div class="wf-arrow">▼</div><div class="wf-node">قياس SP.GR</div></div></div>
+<div class="wf-row"><div class="wf-branch"><div class="wf-node">🌡️ الثرمومتر</div><div class="wf-arrow">▼</div><div class="wf-node">قياس الحرارة T (°C)</div></div><div class="wf-branch"><div class="wf-node">⚗️ المكثاف</div><div class="wf-arrow">▼</div><div class="wf-node">قراءة الكثافة ρ</div></div></div>
 <div class="wf-arrow">▼</div>
 <div class="wf-node calc">💻 إدخال البيانات في البرنامج</div>
 <div class="wf-arrow">▼</div>
-<div class="wf-node calc">🧮 حساب VCF وتصحيح SP.GR@15°C</div>
+<div class="wf-node formula">T(°F) = T(°C) × 9/5 + 32</div>
 <div class="wf-arrow">▼</div>
-<div class="wf-row"><div class="wf-node result">✅ API@60°F</div><div class="wf-node result">✅ SP.GR@15°C</div></div>
+<div class="wf-node formula">SP.GR = ρ + [ 0.000341096 × (T°F − 59) ] ÷ ρ</div>
+<div class="wf-arrow">▼</div>
+<div class="wf-row"><div class="wf-node result">✅ SP.GR@15°C</div><div class="wf-node result">✅ API@60°F</div></div>
+<div class="wf-arrow">▼</div>
+<div class="wf-node calc">🧮 حساب VCF والتحقق من الصحة</div>
 <div class="wf-arrow">▼</div>
 <div class="wf-node calc">🧪 جهاز الطرد المركزي (PPM)</div>
 <div class="wf-arrow">▼</div>
@@ -317,15 +338,15 @@ body { background: linear-gradient(145deg, #1a2a2f 0%, #0d171c 100%); min-height
 <div class="rpt-sample"><div><strong>اسم النموذج:</strong> <span id="rptSampleName">—</span></div><div><strong>التاريخ:</strong> <span id="rptDate">—</span></div></div>
 <table class="rpt-table"><thead><tr><th>المعامل</th><th>القيمة</th></tr></thead><tbody>
 <tr><td>درجة حرارة القياس</td><td id="rptTemp">—</td></tr>
-<tr><td>SP.GR المقاس عند T</td><td id="rptSPGR">—</td></tr>
+<tr><td>الكثافة الأولية (قراءة المكثاف)</td><td id="rptDensity">—</td></tr>
+<tr><td>SP.GR (نتيجة المعادلة)</td><td id="rptSPGR15">—</td></tr>
 <tr><td>معامل التصحيح الحجمي VCF</td><td id="rptVCF">—</td></tr>
-<tr><td>SP.GR@15°C (المصحّح)</td><td id="rptSPGR15">—</td></tr>
 <tr><td>درجة API عند 60°F</td><td id="rptAPI">—</td></tr>
 <tr><td>P.P.M</td><td id="rptPPM">—</td></tr>
 <tr><td>P.T.B</td><td id="rptPTB">—</td></tr>
 </tbody></table>
 <div style="text-align:center;margin:15px 0;"><strong>حالة القياس: </strong><span id="rptStatus" class="rpt-status valid">✅ صحيح</span></div>
-<div class="rpt-notes"><strong>ملاحظات:</strong> تم إجراء التحليل باستخدام مقياس الحرارة والهيدروميتر، وقد تم تصحيح الكثافة النوعية إلى درجة الحرارة المرجعية 15°C وفق معيار API MPMS 11.1.</div>
+<div class="rpt-notes"><strong>ملاحظات:</strong> تم إجراء التحليل باستخدام مقياس الحرارة والمكثاف، وتم استخراج الكثافة النوعية SP.GR من معادلة (حرارة + كثافة) بعد تحويل درجة الحرارة إلى فهرنهايت: <span style="direction:ltr;display:inline-block;font-family:'Courier New',monospace;">SP.GR = ρ + [0.000341096 × (T°F − 59)] ÷ ρ</span> ومن ثم تصحيحها إلى درجة الحرارة المرجعية 15°C وفق معيار API MPMS 11.1.</div>
 <div class="rpt-footer"><div>تصميم: أبو سجاد</div><div id="rptFooterDate">—</div></div>
 </div>
 <div id="splashOverlay" class="splash-overlay">
@@ -347,9 +368,11 @@ const C3 = 2.85;
 const K0 = 613.97226;
 const K1 = 0;
 const T_REF = 15;
+const T_REF_F = 59;
+const TEMP_COEF = 0.000341096;
 const VCF_MIN = 0.90;
 const VCF_MAX = 1.05;
-const STORAGE_KEY = 'tuba_oil_archive_v1';
+const STORAGE_KEY = 'tuba_oil_archive_v2';
 const LOCK_STATE_KEY = 'tuba_lock_state_v1';
 const LOGIN_PASSWORD = 'tuba';
 const LOCK_PASSWORD  = 'sajad';
@@ -389,9 +412,10 @@ const unlockInput   = $('unlockInput');
 const unlockBtn     = $('unlockBtn');
 const unlockError   = $('unlockError');
 const sampleName    = $('sampleName');
-const apiInput      = $('apiInput');
-const spgrInput     = $('spgrInput');
 const tempInput     = $('tempInput');
+const densityInput  = $('densityInput');
+const spgrInput     = $('spgrInput');
+const apiInput      = $('apiInput');
 const spgrManual    = $('spgrManualInput');
 const ppmInput      = $('ppmInput');
 const ptbInput      = $('ptbInput');
@@ -426,10 +450,10 @@ if (v === null || isNaN(v)) return null;
 const f = Math.pow(10, d);
 return Math.round(v * f) / f;
 };
-const roundAPI = v => roundTo(v, 2);
+const roundAPI  = v => roundTo(v, 2);
 const roundSPGR = v => roundTo(v, 4);
 const roundTemp = v => roundTo(v, 2);
-const roundPPM = v => (v === null || isNaN(v)) ? null : Math.round(v);
+const roundPPM  = v => (v === null || isNaN(v)) ? null : Math.round(v);
 function showToast(msg, type = 'success') {
 toastEl.textContent = msg;
 toastEl.className = 'toast show' + (type === 'error' ? ' error' : (type === 'warn' ? ' warn' : ''));
@@ -451,44 +475,51 @@ const v = parseFloat(tempInput.value);
 if (isNaN(v)) return null;
 return tempUnit === 'F' ? fToC(v) : v;
 }
+function getDensity() {
+if (densityInput.value === '') return null;
+const v = parseFloat(densityInput.value);
+if (isNaN(v)) return null;
+return v;
+}
+function calcSPGRfromDensityTemp(rho, tempC) {
+if (rho === null || isNaN(rho) || rho <= 0) return null;
+if (tempC === null || isNaN(tempC)) return rho;
+const tempF = cToF(tempC);
+return rho + (TEMP_COEF / rho) * (tempF - T_REF_F);
+}
 function calcVCF(spgr15, tempC) {
+if (spgr15 === null || tempC === null) return null;
 const rho = spgr15 * 1000;
 const alpha = K0 / (rho * rho) + K1 / rho;
 const dT = tempC - T_REF;
 return Math.exp(-alpha * dT - 0.8 * alpha * alpha * dT * dT);
 }
-function correctSPGRto15(spgrAtT, tempC) {
-let spgr15 = spgrAtT;
-for (let i = 0; i < 30; i++) {
-const vcf = calcVCF(spgr15, tempC);
-const next = spgrAtT / vcf;
-if (Math.abs(next - spgr15) < 1e-8) return next;
-spgr15 = next;
-}
-return spgr15;
-}
 const spgrFromAPI = api => (api === null || isNaN(api) || (api + C2) === 0) ? null : C1 / (api + C2);
-const apiFromSPGR = sg => (sg === null || isNaN(sg) || sg === 0) ? null : C1 / sg - C2;
+const apiFromSPGR = sg  => (sg  === null || isNaN(sg)  || sg === 0) ? null : C1 / sg - C2;
 const ppmFromPTB  = (ptb, sg) => (!sg) ? null : ptb * C3 / sg;
 const ptbFromPPM  = (ppm, sg) => (!sg) ? null : ppm * sg / C3;
-function setFieldError(input, isError) { if (isError) input.classList.add('error'); else input.classList.remove('error'); }
+function setFieldError(input, isError) {
+if (!input) return;
+if (isError) input.classList.add('error');
+else input.classList.remove('error');
+}
 function validateInputs() {
 const errors = [];
-const apiV  = apiInput.value  !== '' ? parseFloat(apiInput.value)  : null;
-const spgrV = spgrInput.value !== '' ? parseFloat(spgrInput.value) : null;
-const tempV = tempInput.value !== '' ? parseFloat(tempInput.value) : null;
-const manV  = spgrManual.value !== '' ? parseFloat(spgrManual.value) : null;
-const ppmV  = ppmInput.value  !== '' ? parseFloat(ppmInput.value)  : null;
-const ptbV  = ptbInput.value  !== '' ? parseFloat(ptbInput.value)  : null;
+const tempV = tempInput.value    !== '' ? parseFloat(tempInput.value)    : null;
+const rhoV  = densityInput.value !== '' ? parseFloat(densityInput.value) : null;
+const manV  = spgrManual.value   !== '' ? parseFloat(spgrManual.value)   : null;
+const ppmV  = ppmInput.value     !== '' ? parseFloat(ppmInput.value)     : null;
+const ptbV  = ptbInput.value     !== '' ? parseFloat(ptbInput.value)     : null;
 let ok = true;
-setFieldError(apiInput, false);
-if (apiV !== null && (isNaN(apiV) || apiV < 0 || apiV > 100)) { setFieldError(apiInput, true); errors.push('API خارج النطاق'); ok = false; }
-setFieldError(spgrInput, false);
-if (spgrV !== null && (isNaN(spgrV) || spgrV < 0.70 || spgrV > 1.10)) { setFieldError(spgrInput, true); errors.push('SP.GR خارج النطاق'); ok = false; }
 setFieldError(tempInput, false);
-if (tempV !== null) { const c = tempUnit === 'F' ? fToC(tempV) : tempV; if (isNaN(c) || c < -50 || c > 150) { setFieldError(tempInput, true); errors.push('الحرارة خارج النطاق'); ok = false; } }
+if (tempV !== null) {
+const c = tempUnit === 'F' ? fToC(tempV) : tempV;
+if (isNaN(c) || c < -50 || c > 150) { setFieldError(tempInput, true); errors.push('الحرارة خارج النطاق'); ok = false; }
+}
+setFieldError(densityInput, false);
+if (rhoV !== null && (isNaN(rhoV) || rhoV < 0.60 || rhoV > 1.20)) { setFieldError(densityInput, true); errors.push('الكثافة خارج النطاق'); ok = false; }
 setFieldError(spgrManual, false);
-if (manV !== null && (isNaN(manV) || manV < 0.70 || manV > 1.10)) { setFieldError(spgrManual, true); errors.push('SP.GR@15 اليدوي خارج النطاق'); ok = false; }
+if (manV !== null && (isNaN(manV) || manV < 0.60 || manV > 1.20)) { setFieldError(spgrManual, true); errors.push('SP.GR@15 اليدوي خارج النطاق'); ok = false; }
 setFieldError(ppmInput, false);
 if (ppmV !== null && (isNaN(ppmV) || ppmV < 0 || ppmV > 100000)) { setFieldError(ppmInput, true); errors.push('PPM خارج النطاق'); ok = false; }
 setFieldError(ptbInput, false);
@@ -499,48 +530,32 @@ function recalculate(source) {
 if (updating) return;
 updating = true;
 const tempC = getTempC();
-let apiVal  = apiInput.value  !== '' ? parseFloat(apiInput.value)  : null;
-let spgrVal = spgrInput.value !== '' ? parseFloat(spgrInput.value) : null;
-let manVal  = spgrManual.value !== '' ? parseFloat(spgrManual.value) : null;
-let ppmVal  = ppmInput.value  !== '' ? parseFloat(ppmInput.value)  : null;
-let ptbVal  = ptbInput.value  !== '' ? parseFloat(ptbInput.value)  : null;
-if (apiVal  !== null && isNaN(apiVal))  apiVal  = null;
-if (spgrVal !== null && isNaN(spgrVal)) spgrVal = null;
-if (manVal  !== null && isNaN(manVal))  manVal  = null;
-if (ppmVal  !== null && isNaN(ppmVal))  ppmVal  = null;
-if (ptbVal  !== null && isNaN(ptbVal))  ptbVal  = null;
+const rho   = getDensity();
+let manVal = spgrManual.value !== '' ? parseFloat(spgrManual.value) : null;
+if (manVal !== null && isNaN(manVal)) manVal = null;
 let spgr15 = null;
-if (manVal !== null && manVal > 0) {
-spgr15 = manVal;
-const newApi = apiFromSPGR(spgr15);
-if (newApi !== null) apiInput.value = roundAPI(newApi);
-if (tempC !== null && Math.abs(tempC - T_REF) > 0.01) {
-const vcf = calcVCF(spgr15, tempC);
-if (source !== 'spgr') spgrInput.value = roundSPGR(spgr15 * vcf);
-} else { if (source !== 'spgr') spgrInput.value = roundSPGR(spgr15); }
-}
-else if (source === 'api' && apiVal !== null) {
-spgr15 = spgrFromAPI(apiVal);
-if (spgr15 !== null) {
-if (tempC !== null && Math.abs(tempC - T_REF) > 0.01) { const vcf = calcVCF(spgr15, tempC); spgrInput.value = roundSPGR(spgr15 * vcf); }
-else { spgrInput.value = roundSPGR(spgr15); }
-}
-}
-else if ((source === 'spgr' || source === 'temp') && spgrVal !== null && spgrVal > 0) {
-if (tempC !== null && Math.abs(tempC - T_REF) > 0.01) spgr15 = correctSPGRto15(spgrVal, tempC);
-else spgr15 = spgrVal;
-const newApi = apiFromSPGR(spgr15);
-if (newApi !== null) apiInput.value = roundAPI(newApi);
-}
-else {
-if (apiVal !== null) spgr15 = spgrFromAPI(apiVal);
-else if (spgrVal !== null && spgrVal > 0) spgr15 = (tempC !== null && Math.abs(tempC - T_REF) > 0.01) ? correctSPGRto15(spgrVal, tempC) : spgrVal;
-}
-if (spgr15 === null && apiVal !== null) spgr15 = spgrFromAPI(apiVal);
+if (manVal !== null && manVal > 0) spgr15 = manVal;
+else if (rho !== null && rho > 0) spgr15 = calcSPGRfromDensityTemp(rho, tempC);
 if (spgr15 !== null && !isNaN(spgr15) && spgr15 > 0) {
-if (source === 'ptb' && ptbVal !== null) { const n = ppmFromPTB(ptbVal, spgr15); if (n !== null) ppmInput.value = roundPPM(n); }
-else if (source === 'ppm' && ppmVal !== null) { const n = ptbFromPPM(ppmVal, spgr15); if (n !== null) ptbInput.value = roundPPM(n); }
-else {
+spgrInput.value = roundSPGR(spgr15).toFixed(4);
+const api = apiFromSPGR(spgr15);
+apiInput.value = api !== null ? roundAPI(api).toFixed(2) : '';
+} else {
+spgrInput.value = '';
+apiInput.value  = '';
+}
+let ppmVal = ppmInput.value !== '' ? parseFloat(ppmInput.value) : null;
+let ptbVal = ptbInput.value !== '' ? parseFloat(ptbInput.value) : null;
+if (ppmVal !== null && isNaN(ppmVal)) ppmVal = null;
+if (ptbVal !== null && isNaN(ptbVal)) ptbVal = null;
+if (spgr15 !== null && spgr15 > 0) {
+if (source === 'ptb' && ptbVal !== null) {
+const n = ppmFromPTB(ptbVal, spgr15);
+if (n !== null) ppmInput.value = roundPPM(n);
+} else if (source === 'ppm' && ppmVal !== null) {
+const n = ptbFromPPM(ppmVal, spgr15);
+if (n !== null) ptbInput.value = roundPPM(n);
+} else {
 if (ptbVal !== null) { const n = ppmFromPTB(ptbVal, spgr15); if (n !== null) ppmInput.value = roundPPM(n); }
 else if (ppmVal !== null) { const n = ptbFromPPM(ppmVal, spgr15); if (n !== null) ptbInput.value = roundPPM(n); }
 }
@@ -565,12 +580,11 @@ else if (vcf === null) { infoStatus.style.display = 'none'; infoStatusText.textC
 else if (vcf >= VCF_MIN && vcf <= VCF_MAX) { infoStatus.style.display = 'inline-block'; infoStatus.textContent = '✅ صحيح'; infoStatus.className = 'status-valid'; infoStatusText.textContent = ''; }
 else { infoStatus.style.display = 'none'; infoStatusText.textContent = '⚠️ VCF خارج النطاق (' + vcf.toFixed(3) + ')'; infoStatusText.style.color = '#FF8A80'; }
 }
-apiInput.addEventListener('input',   () => recalculate('api'));
-spgrInput.addEventListener('input',  () => recalculate('spgr'));
-tempInput.addEventListener('input',  () => recalculate('temp'));
-spgrManual.addEventListener('input', () => recalculate('manual'));
-ppmInput.addEventListener('input',   () => recalculate('ppm'));
-ptbInput.addEventListener('input',   () => recalculate('ptb'));
+tempInput.addEventListener('input',    () => recalculate('temp'));
+densityInput.addEventListener('input', () => recalculate('density'));
+spgrManual.addEventListener('input',   () => recalculate('manual'));
+ppmInput.addEventListener('input',     () => recalculate('ppm'));
+ptbInput.addEventListener('input',     () => recalculate('ptb'));
 document.querySelectorAll('.unit-btn').forEach(btn => {
 btn.addEventListener('click', function() {
 const newUnit = this.dataset.unit;
@@ -601,14 +615,15 @@ datetimeDisplay.textContent = `${d}/${m}/${y}  ${h}:${min}:${s}`;
 updateDateTime();
 setInterval(updateDateTime, 1000);
 $('btnClear').addEventListener('click', () => {
-sampleName.value = '';
-apiInput.value = '';
-spgrInput.value = '';
-tempInput.value = '';
-spgrManual.value = '';
-ppmInput.value = '';
-ptbInput.value = '';
-[apiInput, spgrInput, tempInput, spgrManual, ppmInput, ptbInput, sampleName].forEach(el => setFieldError(el, false));
+sampleName.value   = '';
+tempInput.value    = '';
+densityInput.value = '';
+spgrInput.value    = '';
+apiInput.value     = '';
+spgrManual.value   = '';
+ppmInput.value     = '';
+ptbInput.value     = '';
+[tempInput, densityInput, spgrManual, ppmInput, ptbInput, sampleName].forEach(el => setFieldError(el, false));
 updateInfoBar(null, null);
 sampleName.focus();
 });
@@ -712,14 +727,15 @@ passInput.classList.remove('error');
 setTimeout(() => passInput.focus(), 150);
 }
 function resetAllFields() {
-sampleName.value = '';
-apiInput.value = '';
-spgrInput.value = '';
-tempInput.value = '';
-spgrManual.value = '';
-ppmInput.value = '';
-ptbInput.value = '';
-[apiInput, spgrInput, tempInput, spgrManual, ppmInput, ptbInput, sampleName].forEach(el => setFieldError(el, false));
+sampleName.value   = '';
+tempInput.value    = '';
+densityInput.value = '';
+spgrInput.value    = '';
+apiInput.value     = '';
+spgrManual.value   = '';
+ppmInput.value     = '';
+ptbInput.value     = '';
+[tempInput, densityInput, spgrManual, ppmInput, ptbInput, sampleName].forEach(el => setFieldError(el, false));
 updateInfoBar(null, null);
 }
 function playIntro(done) {
@@ -807,27 +823,26 @@ unlockBtn.addEventListener('click', doUnlock);
 unlockInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doUnlock(); } });
 function buildReport() {
 const tempC = getTempC();
+const rho   = getDensity();
 const manV  = spgrManual.value !== '' ? parseFloat(spgrManual.value) : null;
-const spgrV = spgrInput.value !== '' ? parseFloat(spgrInput.value) : null;
-const apiV  = apiInput.value  !== '' ? parseFloat(apiInput.value)  : null;
 const ppmV  = ppmInput.value  !== '' ? parseFloat(ppmInput.value)  : null;
 const ptbV  = ptbInput.value  !== '' ? parseFloat(ptbInput.value)  : null;
 let spgr15 = null;
 if (manV !== null && manV > 0) spgr15 = manV;
-else if (spgrV !== null && spgrV > 0 && tempC !== null) spgr15 = (Math.abs(tempC - T_REF) > 0.01) ? correctSPGRto15(spgrV, tempC) : spgrV;
-else if (apiV !== null) spgr15 = spgrFromAPI(apiV);
+else if (rho !== null && rho > 0) spgr15 = calcSPGRfromDensityTemp(rho, tempC);
 let vcf = null;
 if (spgr15 !== null && tempC !== null) vcf = calcVCF(spgr15, tempC);
+const api = spgr15 !== null ? apiFromSPGR(spgr15) : null;
 $('rptSampleName').textContent = sampleName.value.trim() || 'غير محدد';
-$('rptDate').textContent = datetimeDisplay.textContent;
+$('rptDate').textContent       = datetimeDisplay.textContent;
 $('rptFooterDate').textContent = datetimeDisplay.textContent;
-$('rptTemp').textContent   = tempC !== null ? roundTemp(tempC).toFixed(2) + ' °C' : '—';
-$('rptSPGR').textContent   = spgrV !== null ? spgrV.toFixed(4) : '—';
-$('rptVCF').textContent    = vcf !== null ? vcf.toFixed(6) : '—';
-$('rptSPGR15').textContent = spgr15 !== null ? roundSPGR(spgr15).toFixed(4) : '—';
-$('rptAPI').textContent    = apiV !== null ? roundAPI(apiV).toFixed(2) : '—';
-$('rptPPM').textContent    = ppmV !== null ? roundPPM(ppmV) : '—';
-$('rptPTB').textContent    = ptbV !== null ? roundPPM(ptbV) : '—';
+$('rptTemp').textContent    = tempC !== null ? roundTemp(tempC).toFixed(2) + ' °C' : '—';
+$('rptDensity').textContent = rho !== null ? rho.toFixed(4) : '—';
+$('rptSPGR15').textContent  = spgr15 !== null ? roundSPGR(spgr15).toFixed(4) : '—';
+$('rptVCF').textContent     = vcf !== null ? vcf.toFixed(6) : '—';
+$('rptAPI').textContent     = api !== null ? roundAPI(api).toFixed(2) : '—';
+$('rptPPM').textContent     = ppmV !== null ? roundPPM(ppmV) : '—';
+$('rptPTB').textContent     = ptbV !== null ? roundPPM(ptbV) : '—';
 const status = $('rptStatus');
 if (vcf !== null && vcf >= VCF_MIN && vcf <= VCF_MAX) { status.textContent = '✅ صحيح'; status.className = 'rpt-status valid'; }
 else if (vcf !== null) { status.textContent = '⚠️ VCF خارج النطاق'; status.className = 'rpt-status invalid'; }
@@ -937,25 +952,22 @@ return;
 const { ok, errors } = validateInputs();
 if (!ok) { showToast('⚠️ لا يمكن الأرشفة: ' + errors.join(' | '), 'warn'); return; }
 const tempC = getTempC();
+const rho   = getDensity();
 const manV  = spgrManual.value !== '' ? parseFloat(spgrManual.value) : null;
-const spgrV = spgrInput.value !== '' ? parseFloat(spgrInput.value) : null;
-const apiV  = apiInput.value  !== '' ? parseFloat(apiInput.value)  : null;
 const ppmV  = ppmInput.value  !== '' ? parseFloat(ppmInput.value)  : null;
 const ptbV  = ptbInput.value  !== '' ? parseFloat(ptbInput.value)  : null;
 let spgr15 = null;
-if (manV !== null) spgr15 = manV;
-else if (spgrV !== null && tempC !== null) spgr15 = (Math.abs(tempC - T_REF) > 0.01) ? correctSPGRto15(spgrV, tempC) : spgrV;
-else if (apiV !== null) spgr15 = spgrFromAPI(apiV);
+if (manV !== null && manV > 0) spgr15 = manV;
+else if (rho !== null && rho > 0) spgr15 = calcSPGRfromDensityTemp(rho, tempC);
+const api = spgr15 !== null ? apiFromSPGR(spgr15) : null;
 const entry = {
 id: Date.now() + '_' + Math.random().toString(36).slice(2, 7),
 name,
 timestamp: datetimeDisplay.textContent,
 ts: Date.now(),
 data: {
-api: apiV, spgr: spgrV,
 temp: tempInput.value !== '' ? parseFloat(tempInput.value) : null,
-tempUnit, tempC,
-spgrManual: manV, ppm: ppmV, ptb: ptbV, spgr15
+tempUnit, tempC, density: rho, spgrManual: manV, spgr15, api, ppm: ppmV, ptb: ptbV
 }
 };
 const arr = getArchive();
@@ -978,9 +990,10 @@ return `
 <div class="name">📄 ${escapeHtml(item.name)}</div>
 <div class="meta">🕒 ${item.timestamp}</div>
 <div class="values">
-<span>API: ${fmt(d.api)}</span>
-<span>SP.GR: ${fmt(d.spgr)}</span>
-<span>SP.GR@15: ${d.spgr15 ? d.spgr15.toFixed(4) : '—'}</span>
+<span>T: ${fmt(d.temp)}°${d.tempUnit || 'C'}</span>
+<span>ρ: ${d.density ? Number(d.density).toFixed(4) : '—'}</span>
+<span>SP.GR: ${d.spgr15 ? Number(d.spgr15).toFixed(4) : '—'}</span>
+<span>API: ${d.api ? Number(d.api).toFixed(2) : '—'}</span>
 <span>PPM: ${fmt(d.ppm)}</span>
 <span>PTB: ${fmt(d.ptb)}</span>
 </div>
@@ -1006,12 +1019,11 @@ if (d.tempUnit && d.tempUnit !== tempUnit) {
 tempUnit = d.tempUnit;
 document.querySelectorAll('.unit-btn').forEach(b => { b.classList.toggle('active', b.dataset.unit === tempUnit); });
 }
-apiInput.value   = (d.api  !== null && d.api  !== undefined) ? d.api  : '';
-spgrInput.value  = (d.spgr !== null && d.spgr !== undefined) ? d.spgr : '';
-tempInput.value  = (d.temp !== null && d.temp !== undefined) ? d.temp : '';
-spgrManual.value = (d.spgrManual !== null && d.spgrManual !== undefined) ? d.spgrManual : '';
-ppmInput.value   = (d.ppm  !== null && d.ppm  !== undefined) ? d.ppm  : '';
-ptbInput.value   = (d.ptb  !== null && d.ptb  !== undefined) ? d.ptb  : '';
+tempInput.value    = (d.temp    !== null && d.temp    !== undefined) ? d.temp    : '';
+densityInput.value = (d.density !== null && d.density !== undefined) ? d.density : '';
+spgrManual.value   = (d.spgrManual !== null && d.spgrManual !== undefined) ? d.spgrManual : '';
+ppmInput.value     = (d.ppm     !== null && d.ppm     !== undefined) ? d.ppm     : '';
+ptbInput.value     = (d.ptb     !== null && d.ptb     !== undefined) ? d.ptb     : '';
 $('archiveOverlay').classList.remove('active');
 showToast('✅ تم استرجاع النموذج: ' + item.name);
 recalculate('manual');
@@ -1029,10 +1041,12 @@ setArchive([]);
 renderArchive();
 showToast('🗑️ تم حذف كل الأرشيف');
 });
-[apiInput, spgrInput, tempInput, spgrManual, ppmInput, ptbInput].forEach(el => { el.addEventListener('blur', () => validateInputs()); });
+[tempInput, densityInput, spgrManual, ppmInput, ptbInput].forEach(el => {
+el.addEventListener('blur', () => validateInputs());
+});
 
 // ============================================================
-// 🚀 الإقلاع: فحص حالة القفل من السحابة
+// 🚀 الإقلاع: فحص حالة القفل من السحابة + مراقبة دورية
 // ============================================================
 (async function boot() {
 let locked = false;
@@ -1046,7 +1060,6 @@ showLockPage();
 } else {
 showLoginPage();
 }
-// 🔄 مراقبة دورية كل 8 ثوان
 setInterval(async () => {
 const cloud = await cloudGetLock();
 if (cloud === null) return;
